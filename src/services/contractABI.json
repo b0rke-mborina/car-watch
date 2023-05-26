@@ -1,0 +1,544 @@
+[
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+			"indexed": true,
+			"internalType": "address",
+			"name": "authorizedAddress",
+			"type": "address"
+			}
+		],
+		"name": "AddressAuthorized",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+			"indexed": true,
+			"internalType": "address",
+			"name": "authorizedAddress",
+			"type": "address"
+			}
+		],
+		"name": "AddressRevoked",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+			"indexed": true,
+			"internalType": "uint256",
+			"name": "vehicleId",
+			"type": "uint256"
+			},
+			{
+			"indexed": false,
+			"internalType": "string",
+			"name": "description",
+			"type": "string"
+			}
+		],
+		"name": "BreakdownAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+			"indexed": true,
+			"internalType": "uint256",
+			"name": "vehicleId",
+			"type": "uint256"
+			},
+			{
+			"indexed": false,
+			"internalType": "string",
+			"name": "description",
+			"type": "string"
+			}
+		],
+		"name": "DamageAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+			"indexed": true,
+			"internalType": "uint256",
+			"name": "vehicleId",
+			"type": "uint256"
+			},
+			{
+			"indexed": false,
+			"internalType": "string",
+			"name": "description",
+			"type": "string"
+			}
+		],
+		"name": "InsuranceAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+			"indexed": true,
+			"internalType": "uint256",
+			"name": "vehicleId",
+			"type": "uint256"
+			},
+			{
+			"indexed": false,
+			"internalType": "address",
+			"name": "owner",
+			"type": "address"
+			}
+		],
+		"name": "OwnerAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+			"indexed": true,
+			"internalType": "uint256",
+			"name": "vehicleId",
+			"type": "uint256"
+			},
+			{
+			"indexed": false,
+			"internalType": "address",
+			"name": "previousOwner",
+			"type": "address"
+			},
+			{
+			"indexed": false,
+			"internalType": "address",
+			"name": "newOwner",
+			"type": "address"
+			}
+		],
+		"name": "OwnershipTransferred",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+			"indexed": true,
+			"internalType": "uint256",
+			"name": "vehicleId",
+			"type": "uint256"
+			},
+			{
+			"indexed": false,
+			"internalType": "string",
+			"name": "description",
+			"type": "string"
+			}
+		],
+		"name": "RepairAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+			"indexed": true,
+			"internalType": "uint256",
+			"name": "vehicleId",
+			"type": "uint256"
+			},
+			{
+			"indexed": false,
+			"internalType": "string",
+			"name": "description",
+			"type": "string"
+			}
+		],
+		"name": "ServiceAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+			"indexed": true,
+			"internalType": "uint256",
+			"name": "vehicleId",
+			"type": "uint256"
+			},
+			{
+			"indexed": false,
+			"internalType": "string",
+			"name": "vin",
+			"type": "string"
+			},
+			{
+			"indexed": false,
+			"internalType": "string",
+			"name": "make",
+			"type": "string"
+			},
+			{
+			"indexed": false,
+			"internalType": "string",
+			"name": "model",
+			"type": "string"
+			},
+			{
+			"indexed": false,
+			"internalType": "uint256",
+			"name": "year",
+			"type": "uint256"
+			},
+			{
+			"indexed": false,
+			"internalType": "address",
+			"name": "owner",
+			"type": "address"
+			}
+		],
+		"name": "VehicleRegistered",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+			"internalType": "uint256",
+			"name": "_vehicleId",
+			"type": "uint256"
+			},
+			{
+			"internalType": "string",
+			"name": "_description",
+			"type": "string"
+			}
+		],
+		"name": "addBreakdown",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+			"internalType": "uint256",
+			"name": "_vehicleId",
+			"type": "uint256"
+			},
+			{
+			"internalType": "string",
+			"name": "_description",
+			"type": "string"
+			}
+		],
+		"name": "addDamage",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+			"internalType": "uint256",
+			"name": "_vehicleId",
+			"type": "uint256"
+			},
+			{
+			"internalType": "string",
+			"name": "_description",
+			"type": "string"
+			}
+		],
+		"name": "addInsurance",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+			"internalType": "uint256",
+			"name": "_vehicleId",
+			"type": "uint256"
+			},
+			{
+			"internalType": "string",
+			"name": "_description",
+			"type": "string"
+			}
+		],
+		"name": "addRepair",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+			"internalType": "uint256",
+			"name": "_vehicleId",
+			"type": "uint256"
+			},
+			{
+			"internalType": "string",
+			"name": "_description",
+			"type": "string"
+			}
+		],
+		"name": "addService",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+			"internalType": "address",
+			"name": "_address",
+			"type": "address"
+			}
+		],
+		"name": "authorizeAddress",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+			"internalType": "address",
+			"name": "_owner",
+			"type": "address"
+			}
+		],
+		"name": "getOwnerVehicles",
+		"outputs": [
+			{
+			"internalType": "uint256[]",
+			"name": "",
+			"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+			"internalType": "uint256",
+			"name": "_vehicleId",
+			"type": "uint256"
+			}
+		],
+		"name": "getVehicle",
+		"outputs": [
+			{
+			"internalType": "string",
+			"name": "",
+			"type": "string"
+			},
+			{
+			"internalType": "string",
+			"name": "",
+			"type": "string"
+			},
+			{
+			"internalType": "string",
+			"name": "",
+			"type": "string"
+			},
+			{
+			"internalType": "uint256",
+			"name": "",
+			"type": "uint256"
+			},
+			{
+			"internalType": "address",
+			"name": "",
+			"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+			"internalType": "uint256",
+			"name": "_vehicleId",
+			"type": "uint256"
+			}
+		],
+		"name": "getVehicleBreakdowns",
+		"outputs": [
+			{
+			"internalType": "uint256[]",
+			"name": "",
+			"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+			"internalType": "uint256",
+			"name": "_vehicleId",
+			"type": "uint256"
+			}
+		],
+		"name": "getVehicleDamages",
+		"outputs": [
+			{
+			"internalType": "uint256[]",
+			"name": "",
+			"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+			"internalType": "uint256",
+			"name": "_vehicleId",
+			"type": "uint256"
+			}
+		],
+		"name": "getVehicleInsurances",
+		"outputs": [
+			{
+			"internalType": "uint256[]",
+			"name": "",
+			"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+			"internalType": "uint256",
+			"name": "_vehicleId",
+			"type": "uint256"
+			}
+		],
+		"name": "getVehicleOwners",
+		"outputs": [
+			{
+			"internalType": "address[]",
+			"name": "",
+			"type": "address[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+			"internalType": "uint256",
+			"name": "_vehicleId",
+			"type": "uint256"
+			}
+		],
+		"name": "getVehicleRepairs",
+		"outputs": [
+			{
+			"internalType": "uint256[]",
+			"name": "",
+			"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+			"internalType": "uint256",
+			"name": "_vehicleId",
+			"type": "uint256"
+			}
+		],
+		"name": "getVehicleServices",
+		"outputs": [
+			{
+			"internalType": "uint256[]",
+			"name": "",
+			"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+			"internalType": "string",
+			"name": "_vin",
+			"type": "string"
+			},
+			{
+			"internalType": "string",
+			"name": "_make",
+			"type": "string"
+			},
+			{
+			"internalType": "string",
+			"name": "_model",
+			"type": "string"
+			},
+			{
+			"internalType": "uint256",
+			"name": "_year",
+			"type": "uint256"
+			}
+		],
+		"name": "registerVehicle",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+			"internalType": "address",
+			"name": "_address",
+			"type": "address"
+			}
+		],
+		"name": "revokeAddress",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+			"internalType": "uint256",
+			"name": "_vehicleId",
+			"type": "uint256"
+			},
+			{
+			"internalType": "address",
+			"name": "_newOwner",
+			"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+]
