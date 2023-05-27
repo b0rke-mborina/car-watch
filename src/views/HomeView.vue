@@ -8,13 +8,16 @@
 <script>
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
-import { transferOwnership } from '@/services'
+import { getAllVehicles, transferOwnership } from '@/services'
 
 export default {
 	name: 'HomeView',
-	mounted() {
+	async mounted() {
+		console.log("Started getter");
+		await getAllVehicles();
+		console.log("Ended getter");
 		console.log("Started");
-		transferOwnership(1, "0xcd3B766CCDd6AE721141F452C550Ca635964ce71")
+		await transferOwnership(1, "0xcd3B766CCDd6AE721141F452C550Ca635964ce71");
 		console.log("Ended");
 	},
 	components: {

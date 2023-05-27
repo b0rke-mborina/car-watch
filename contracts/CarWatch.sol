@@ -48,6 +48,21 @@ contract CarWatch {
 		_;
 	}
 
+	function getAllVehicles() public view returns (Vehicle[] memory) {
+		Vehicle[] memory allVehicles = new Vehicle[](vehicleCount);
+		for (uint256 i = 0; i < vehicleCount; i++) {
+			allVehicles[i] = vehicles[i];
+		}
+		return allVehicles;
+	}
+
+	function getVehicle(uint256 _vehicleId) public view returns (string memory, string memory, string memory, uint256, address) {
+		require(_vehicleId < vehicleCount, "Invalid vehicle ID");
+
+		Vehicle storage vehicle = vehicles[_vehicleId];
+		return (vehicle.vin, vehicle.make, vehicle.model, vehicle.year, vehicle.currentOwner);
+	}
+
 	function registerVehicle(string memory _vin, string memory _make, string memory _model, uint256 _year) public {
 		require(bytes(_vin).length > 0, "VIN is required");
 		require(bytes(_make).length > 0, "Make is required");
@@ -121,13 +136,6 @@ contract CarWatch {
 		vehicle.insurances.push(block.timestamp);
 
 		emit InsuranceAdded(_vehicleId, _description);
-	}
-
-	function getVehicle(uint256 _vehicleId) public view returns (string memory, string memory, string memory, uint256, address) {
-		require(_vehicleId < vehicleCount, "Invalid vehicle ID");
-
-		Vehicle storage vehicle = vehicles[_vehicleId];
-		return (vehicle.vin, vehicle.make, vehicle.model, vehicle.year, vehicle.currentOwner);
 	}
 
 	function getVehicleBreakdowns(uint256 _vehicleId) public view returns (uint256[] memory) {
