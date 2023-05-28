@@ -189,15 +189,19 @@ contract CarWatch {
 
 		for (uint256 i = 0; i < ownerVehicleList.length; i++) {
 			if (ownerVehicleList[i] == _vehicleId) {
-					if (i != ownerVehicleList.length - 1) {
-						ownerVehicleList[i] = ownerVehicleList[ownerVehicleList.length - 1];
-					}
-					ownerVehicleList.pop();
-					break;
+				if (i != ownerVehicleList.length - 1) {
+					ownerVehicleList[i] = ownerVehicleList[ownerVehicleList.length - 1];
+				}
+				ownerVehicleList.pop();
+				break;
 			}
 		}
 
 		return ownerVehicleList;
+	}
+
+	function isAuthorizedAddress(address _address) public view returns (bool) {
+		return authorizedAddresses[_address];
 	}
 
 	function authorizeAddress(address _address) public onlyOwner(0) {

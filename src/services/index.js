@@ -182,6 +182,15 @@ export async function removeVehicleFromOwner(ownerAddress, vehicleId) {
 	}
 }
 
+export async function isAuthorizedAddress(address) {
+	try {
+		const isAuthorized = await contract.isAuthorizedAddress(address);
+		console.log(isAuthorized);
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 export async function authorizeAddress(address) {
 	try {
 		const signer = provider.getSigner();
