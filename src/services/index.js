@@ -14,17 +14,28 @@ export async function getAllVehicles() {
 	}
 }
 
-export function getVehicle(vehicleId) { // Details
-	// TO-DO implement
+export async function getVehicle(vehicleId) {
+	try {
+		const vehicle = await contract.getVehicle(vehicleId);
+		console.log(vehicle);
+	} catch (error) {
+		console.error(error);
+	}
 }
 
-export function registerVehicle(vehicleVin, vehicleMake, vehicleModel, vehicleYear) {
-	// TO-DO implement
+export async function registerVehicle(vehicleVin, vehicleMake, vehicleModel, vehicleYear) {
+	try {
+		const signer = provider.getSigner();
+		const contractWithSigner = contract.connect(signer);
+		const transaction = await contractWithSigner.registerVehicle(vehicleVin, vehicleMake, vehicleModel, vehicleYear);
+		await transaction.wait();
+		console.log(transaction);
+	} catch (error) {
+		console.error(error);
+	}
 }
 
 export async function transferOwnership(vehicleId, newOwner) {
-	// TO-DO implement
-	console.log("OK");
 	try {
 		const signer = provider.getSigner();
 		const contractWithSigner = contract.connect(signer);
@@ -36,62 +47,161 @@ export async function transferOwnership(vehicleId, newOwner) {
 	}
 }
 
-export function addBreakdown(vehicleId, description) {
-	// TO-DO implement
+export async function addBreakdown(vehicleId, description) {
+	try {
+		const signer = provider.getSigner();
+		const contractWithSigner = contract.connect(signer);
+		const transaction = await contractWithSigner.addBreakdown(vehicleId, description);
+		await transaction.wait();
+		console.log(transaction);
+	} catch (error) {
+		console.error(error);
+	}
 }
 
-export function addDamage(vehicleId, description) {
-	// TO-DO implement
+export async function addDamage(vehicleId, description) {
+	try {
+		const signer = provider.getSigner();
+		const contractWithSigner = contract.connect(signer);
+		const transaction = await contractWithSigner.addDamage(vehicleId, description);
+		await transaction.wait();
+		console.log(transaction);
+	} catch (error) {
+		console.error(error);
+	}
 }
 
-export function addService(vehicleId, description) {
-	// TO-DO implement
+export async function addService(vehicleId, description) {
+	try {
+		const signer = provider.getSigner();
+		const contractWithSigner = contract.connect(signer);
+		const transaction = await contractWithSigner.addService(vehicleId, description);
+		await transaction.wait();
+		console.log(transaction);
+	} catch (error) {
+		console.error(error);
+	}
 }
 
-export function addRepair(vehicleId, description) {
-	// TO-DO implement
+export async function addRepair(vehicleId, description) {
+	try {
+		const signer = provider.getSigner();
+		const contractWithSigner = contract.connect(signer);
+		const transaction = await contractWithSigner.addRepair(vehicleId, description);
+		await transaction.wait();
+		console.log(transaction);
+	} catch (error) {
+		console.error(error);
+	}
 }
 
-export function addInsurance(vehicleId, description) {
-	// TO-DO implement
+export async function addInsurance(vehicleId, description) {
+	try {
+		const signer = provider.getSigner();
+		const contractWithSigner = contract.connect(signer);
+		const transaction = await contractWithSigner.addInsurance(vehicleId, description);
+		await transaction.wait();
+		console.log(transaction);
+	} catch (error) {
+		console.error(error);
+	}
 }
 
-export function getVehicleBreakdowns(vehicleId) {
-	// TO-DO implement
+export async function getVehicleBreakdowns(vehicleId) {
+	try {
+		const vehicleBreakdowns = await contract.getVehicleBreakdowns(vehicleId);
+		console.log(vehicleBreakdowns);
+	} catch (error) {
+		console.error(error);
+	}
 }
 
-export function getVehicleDamages(vehicleId) {
-	// TO-DO implement
+export async function getVehicleDamages(vehicleId) {
+	try {
+		const vehicleDamages = await contract.getVehicleDamages(vehicleId);
+		console.log(vehicleDamages);
+	} catch (error) {
+		console.error(error);
+	}
 }
 
-export function getVehicleServices(vehicleId) {
-	// TO-DO implement
+export async function getVehicleServices(vehicleId) {
+	try {
+		const vehicleServices = await contract.getVehicleServices(vehicleId);
+		console.log(vehicleServices);
+	} catch (error) {
+		console.error(error);
+	}
 }
 
-export function getVehicleRepairs(vehicleId) {
-	// TO-DO implement
+export async function getVehicleRepairs(vehicleId) {
+	try {
+		const vehicleRepairs = await contract.getVehicleRepairs(vehicleId);
+		console.log(vehicleRepairs);
+	} catch (error) {
+		console.error(error);
+	}
 }
 
-export function getVehicleInsurances(vehicleId) {
-	// TO-DO implement
+export async function getVehicleInsurances(vehicleId) {
+	try {
+		const vehicleInsurances = await contract.getVehicleInsurances(vehicleId);
+		console.log(vehicleInsurances);
+	} catch (error) {
+		console.error(error);
+	}
 }
 
-export function getVehicleOwners(vehicleId) {
-	// TO-DO implement
+export async function getVehicleOwners(vehicleId) {
+	try {
+		const vehicleOwners = await contract.getVehicleOwners(vehicleId);
+		console.log(vehicleOwners);
+	} catch (error) {
+		console.error(error);
+	}
 }
 
-export function getOwnerVehicles(ownerAddress) {
-	// TO-DO implement
+export async function getOwnerVehicles(ownerAddress) {
+	try {
+		const ownerVehicles = await contract.getOwnerVehicles(ownerAddress);
+		console.log(ownerVehicles);
+	} catch (error) {
+		console.error(error);
+	}
 }
 
-export function removeVehicleFromOwner(ownerAddress, vehicleId) {
-	// TO-DO implement
+export async function removeVehicleFromOwner(ownerAddress, vehicleId) {
+	try {
+		const signer = provider.getSigner();
+		const contractWithSigner = contract.connect(signer);
+		const transaction = await contractWithSigner.removeVehicleFromOwner(ownerAddress, vehicleId);
+		await transaction.wait();
+		console.log(transaction);
+	} catch (error) {
+		console.error(error);
+	}
 }
 
-export function authorizeAddress(address) {
-	// TO-DO implement
+export async function authorizeAddress(address) {
+	try {
+		const signer = provider.getSigner();
+		const contractWithSigner = contract.connect(signer);
+		const transaction = await contractWithSigner.authorizeAddress(address);
+		await transaction.wait();
+		console.log(transaction);
+	} catch (error) {
+		console.error(error);
+	}
 }
 
-export function revokeAddress(address) {
-	// TO-DO implement
+export async function revokeAddress(address) {
+	try {
+		const signer = provider.getSigner();
+		const contractWithSigner = contract.connect(signer);
+		const transaction = await contractWithSigner.revokeAddress(address);
+		await transaction.wait();
+		console.log(transaction);
+	} catch (error) {
+		console.error(error);
+	}
 }
