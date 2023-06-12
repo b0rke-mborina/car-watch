@@ -16,6 +16,7 @@ contract CarWatch {
 		address[] owners;
 	}
 
+	address private contractOwner;
 	mapping(uint256 => Vehicle) private vehicles;
 	mapping(address => uint256[]) private ownerVehicles;
 	mapping(address => bool) private authorizedAddresses;
@@ -32,6 +33,11 @@ contract CarWatch {
 	event AddressAuthorized(address indexed authorizedAddress);
 	event AddressRevoked(address indexed authorizedAddress);
 
+	constructor() {
+		contractOwner = msg.sender;
+		authorizeAddress(contractOwner);
+	}
+
 	modifier vehicleExists(uint256 _vehicleId) {
 		require(_vehicleId < vehicleCount, "Invalid vehicle ID");
 		_;
@@ -44,7 +50,12 @@ contract CarWatch {
 	}
 
 	modifier onlyAuthorized() {
-		require(authorizedAddresses[msg.sender], "Only authorized addresses can perform this action");
+		require(authorizedAddresses[msg.sender] || msg.sender == contractOwner, "Only authorized addresses can perform this action");
+		_;
+	}
+
+	modifier onlyContractOwner() {
+		require(msg.sender == contractOwner, "Only the contract owner can perform this action");
 		_;
 	}
 
@@ -56,11 +67,44 @@ contract CarWatch {
 		return allVehicles;
 	}
 
-	function getVehicle(uint256 _vehicleId) public view returns (string memory, string memory, string memory, uint256, address) {
+	function getVehicle(uint256 _vehicleId) public view returns (string memory, string memory, string memory, uint256, address,
+																					uint256[] memory, uint256[] memory, uint256[] memory, uint256[] memory, uint256[] memory) {
 		require(_vehicleId < vehicleCount, "Invalid vehicle ID");
 
 		Vehicle storage vehicle = vehicles[_vehicleId];
-		return (vehicle.vin, vehicle.make, vehicle.model, vehicle.year, vehicle.currentOwner);
+
+		// Retrieve breakdowns as objects
+		uint256[] memory breakdowns = new uint256[](vehicle.breakdowns.length);
+		for (uint256 i = 0; i < vehicle.breakdowns.length; i++) {
+			breakdowns[i] = vehicle.breakdowns[i];
+		}
+
+		// Retrieve damages as objects
+		uint256[] memory damages = new uint256[](vehicle.damages.length);
+		for (uint256 i = 0; i < vehicle.damages.length; i++) {
+			damages[i] = vehicle.damages[i];
+		}
+
+		// Retrieve services as objects
+		uint256[] memory services = new uint256[](vehicle.services.length);
+		for (uint256 i = 0; i < vehicle.services.length; i++) {
+			services[i] = vehicle.services[i];
+		}
+
+		// Retrieve repairs as objects
+		uint256[] memory repairs = new uint256[](vehicle.repairs.length);
+		for (uint256 i = 0; i < vehicle.repairs.length; i++) {
+			repairs[i] = vehicle.repairs[i];
+		}
+
+		// Retrieve insurances as objects
+		uint256[] memory insurances = new uint256[](vehicle.insurances.length);
+		for (uint256 i = 0; i < vehicle.insurances.length; i++) {
+			insurances[i] = vehicle.insurances[i];
+		}
+
+		return (vehicle.vin, vehicle.make, vehicle.model, vehicle.year, vehicle.currentOwner,
+			breakdowns, damages, services, repairs, insurances);
 	}
 
 	function registerVehicle(string memory _vin, string memory _make, string memory _model, uint256 _year) public {
@@ -204,7 +248,7 @@ contract CarWatch {
 		return authorizedAddresses[_address];
 	}
 
-	function authorizeAddress(address _address) public onlyOwner(0) {
+	function authorizeAddress(address _address) public onlyContractOwner() {
 		require(_address != address(0), "Invalid address");
 
 		authorizedAddresses[_address] = true;
@@ -212,7 +256,7 @@ contract CarWatch {
 		emit AddressAuthorized(_address);
 	}
 
-	function revokeAddress(address _address) public onlyOwner(0) {
+	function revokeAddress(address _address) public onlyContractOwner() {
 		require(_address != address(0), "Invalid address");
 
 		authorizedAddresses[_address] = false;

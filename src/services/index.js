@@ -38,6 +38,8 @@ export async function registerVehicle(vehicleVin, vehicleMake, vehicleModel, veh
 export async function transferOwnership(vehicleId, newOwner) {
 	try {
 		const signer = provider.getSigner();
+		console.log("signer");
+		console.log(signer);
 		const contractWithSigner = contract.connect(signer);
 		const transaction = await contractWithSigner.transferOwnership(vehicleId, newOwner);
 		await transaction.wait();
@@ -208,6 +210,28 @@ export async function revokeAddress(address) {
 		const signer = provider.getSigner();
 		const contractWithSigner = contract.connect(signer);
 		const transaction = await contractWithSigner.revokeAddress(address);
+		await transaction.wait();
+		console.log(transaction);
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+export async function generateData() {
+	try {
+		const signer = provider.getSigner();
+		const contractWithSigner = contract.connect(signer);
+		let transaction = await contractWithSigner.registerVehicle("111111", "Ferrari", "458 Italia", 2010);
+		transaction = await contractWithSigner.registerVehicle("222222", "Lamborghini", "Galllardo", 2012);
+		transaction = await contractWithSigner.registerVehicle("333333", "Skoda", "Fabia", 2008);
+		// transaction = await contractWithSigner.transferOwnership(1, signer._address);
+		// transaction = await contractWithSigner.transferOwnership(2, signer._address);
+		transaction = await contractWithSigner.addBreakdown(1, "Something broke");
+		transaction = await contractWithSigner.addDamage(1, "I crashed it");
+		transaction = await contractWithSigner.addService(2, "Dosao na popravak");
+		transaction = await contractWithSigner.addRepair(2, "Popravljen, kao novi je");
+		transaction = await contractWithSigner.addInsurance(1, "Protiv razbijanja, vrijedi 2 godine");
+		transaction = await contractWithSigner.authorizeAddress(0xC5a4ACCa9d971D6a7eC3b67c95e09dCc384C89dB);
 		await transaction.wait();
 		console.log(transaction);
 	} catch (error) {
