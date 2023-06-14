@@ -1,7 +1,7 @@
 <template>
 	<div class="vehicles">
 		<div class="content">
-			<h1 class="heading">This is an vehicle page</h1>
+			<h1 class="heading">Vehicles</h1>
 			<VehicleItem v-for="vehicle in vehicles" v-bind:key="vehicle" :vehicle="vehicle"/>
 			<div class="button-container">
 				<router-link :to="{ name: 'home' }" class="action">
@@ -36,41 +36,6 @@ export default {
 	data() {
 		return {
 			vehicles: [
-				{
-					"vin": "111",
-					"make": "111",
-					"model": "111",
-					"year": "111",
-					"owner": "111",
-				},
-				{
-					"vin": "111",
-					"make": "111",
-					"model": "111",
-					"year": "111",
-					"owner": "111",
-				},
-				{
-					"vin": "111",
-					"make": "111",
-					"model": "111",
-					"year": "111",
-					"owner": "111",
-				},
-				{
-					"vin": "111",
-					"make": "111",
-					"model": "111",
-					"year": "111",
-					"owner": "111",
-				},
-				{
-					"vin": "111",
-					"make": "111",
-					"model": "111",
-					"year": "111",
-					"owner": "111",
-				},
 				{
 					"vin": "111",
 					"make": "111",
@@ -135,7 +100,7 @@ export default {
 
 .button {
 	font-weight: bold;
-	padding: 8px;
+	padding: 8px 32px;
 	border: 2px solid black;
 	border-radius: 16px;
 	background-color: #B30303;
