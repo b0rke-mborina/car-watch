@@ -43,6 +43,16 @@ contract CarWatch {
 		_;
 	}
 
+	modifier requireValidAddress(address _address) {
+        require(_address != address(0), "Invalid address");
+        _;
+    }
+
+    modifier requireDescription(string memory _description) {
+        require(bytes(_description).length > 0, "Description is required");
+        _;
+    }
+
 	modifier onlyOwner(uint256 _vehicleId) {
 		Vehicle storage vehicle = vehicles[_vehicleId];
 		require(msg.sender == vehicle.currentOwner, "Only the current owner can perform this action");
@@ -67,10 +77,8 @@ contract CarWatch {
 		return allVehicles;
 	}
 
-	function getVehicle(uint256 _vehicleId) public view returns (string memory, string memory, string memory, uint256, address,
-																					uint256[] memory, uint256[] memory, uint256[] memory, uint256[] memory, uint256[] memory) {
+	function getVehicle(uint256 _vehicleId) public view returns (string memory, string memory, string memory, uint256, address, uint256[] memory, uint256[] memory, uint256[] memory, uint256[] memory, uint256[] memory) {
 		require(_vehicleId < vehicleCount, "Invalid vehicle ID");
-
 		Vehicle storage vehicle = vehicles[_vehicleId];
 
 		// Retrieve breakdowns as objects
@@ -122,9 +130,7 @@ contract CarWatch {
 		vehicleCount++;
 	}
 
-	function transferOwnership(uint256 _vehicleId, address _newOwner) public vehicleExists(_vehicleId) onlyOwner(_vehicleId) {
-		require(_newOwner != address(0), "Invalid new owner");
-
+	function transferOwnership(uint256 _vehicleId, address _newOwner) public vehicleExists(_vehicleId) requireValidAddress(_newOwner) onlyOwner(_vehicleId) {
 		Vehicle storage vehicle = vehicles[_vehicleId];
 		address previousOwner = vehicle.currentOwner;
 
@@ -137,89 +143,67 @@ contract CarWatch {
 		emit OwnerAdded(_vehicleId, _newOwner);
 	}
 
-	function addBreakdown(uint256 _vehicleId, string memory _description) public vehicleExists(_vehicleId) onlyAuthorized {
-		require(bytes(_description).length > 0, "Description is required");
-
+	function addBreakdown(uint256 _vehicleId, string memory _description) public vehicleExists(_vehicleId) requireDescription(_description) onlyAuthorized {
 		Vehicle storage vehicle = vehicles[_vehicleId];
 		vehicle.breakdowns.push(block.timestamp);
 
 		emit BreakdownAdded(_vehicleId, _description);
 	}
 
-	function addDamage(uint256 _vehicleId, string memory _description) public vehicleExists(_vehicleId) onlyAuthorized {
-		require(bytes(_description).length > 0, "Description is required");
-
+	function addDamage(uint256 _vehicleId, string memory _description) public vehicleExists(_vehicleId) requireDescription(_description) onlyAuthorized {
 		Vehicle storage vehicle = vehicles[_vehicleId];
 		vehicle.damages.push(block.timestamp);
 
 		emit DamageAdded(_vehicleId, _description);
 	}
 
-	function addService(uint256 _vehicleId, string memory _description) public vehicleExists(_vehicleId) onlyAuthorized {
-		require(bytes(_description).length > 0, "Description is required");
-
+	function addService(uint256 _vehicleId, string memory _description) public vehicleExists(_vehicleId) requireDescription(_description) onlyAuthorized {
 		Vehicle storage vehicle = vehicles[_vehicleId];
 		vehicle.services.push(block.timestamp);
 
 		emit ServiceAdded(_vehicleId, _description);
 	}
 
-	function addRepair(uint256 _vehicleId, string memory _description) public vehicleExists(_vehicleId) onlyAuthorized {
-		require(bytes(_description).length > 0, "Description is required");
-
+	function addRepair(uint256 _vehicleId, string memory _description) public vehicleExists(_vehicleId) requireDescription(_description) onlyAuthorized {
 		Vehicle storage vehicle = vehicles[_vehicleId];
 		vehicle.repairs.push(block.timestamp);
 
 		emit RepairAdded(_vehicleId, _description);
 	}
 
-	function addInsurance(uint256 _vehicleId, string memory _description) public vehicleExists(_vehicleId) onlyAuthorized {
-		require(bytes(_description).length > 0, "Description is required");
-
+	function addInsurance(uint256 _vehicleId, string memory _description) public vehicleExists(_vehicleId) requireDescription(_description) onlyAuthorized {
 		Vehicle storage vehicle = vehicles[_vehicleId];
 		vehicle.insurances.push(block.timestamp);
 
 		emit InsuranceAdded(_vehicleId, _description);
 	}
 
-	function getVehicleBreakdowns(uint256 _vehicleId) public view returns (uint256[] memory) {
-		require(_vehicleId < vehicleCount, "Invalid vehicle ID");
-
+	function getVehicleBreakdowns(uint256 _vehicleId) public view vehicleExists(_vehicleId) returns (uint256[] memory) {
 		Vehicle storage vehicle = vehicles[_vehicleId];
 		return vehicle.breakdowns;
 	}
 
-	function getVehicleDamages(uint256 _vehicleId) public view returns (uint256[] memory) {
-		require(_vehicleId < vehicleCount, "Invalid vehicle ID");
-
+	function getVehicleDamages(uint256 _vehicleId) public view vehicleExists(_vehicleId) returns (uint256[] memory) {
 		Vehicle storage vehicle = vehicles[_vehicleId];
 		return vehicle.damages;
 	}
 
-	function getVehicleServices(uint256 _vehicleId) public view returns (uint256[] memory) {
-		require(_vehicleId < vehicleCount, "Invalid vehicle ID");
-
+	function getVehicleServices(uint256 _vehicleId) public view vehicleExists(_vehicleId) returns (uint256[] memory) {
 		Vehicle storage vehicle = vehicles[_vehicleId];
 		return vehicle.services;
 	}
 
-	function getVehicleRepairs(uint256 _vehicleId) public view returns (uint256[] memory) {
-		require(_vehicleId < vehicleCount, "Invalid vehicle ID");
-
+	function getVehicleRepairs(uint256 _vehicleId) public view vehicleExists(_vehicleId) returns (uint256[] memory) {
 		Vehicle storage vehicle = vehicles[_vehicleId];
 		return vehicle.repairs;
 	}
 
-	function getVehicleInsurances(uint256 _vehicleId) public view returns (uint256[] memory) {
-		require(_vehicleId < vehicleCount, "Invalid vehicle ID");
-
+	function getVehicleInsurances(uint256 _vehicleId) public view vehicleExists(_vehicleId) returns (uint256[] memory) {
 		Vehicle storage vehicle = vehicles[_vehicleId];
 		return vehicle.insurances;
 	}
 
-	function getVehicleOwners(uint256 _vehicleId) public view returns (address[] memory) {
-		require(_vehicleId < vehicleCount, "Invalid vehicle ID");
-
+	function getVehicleOwners(uint256 _vehicleId) public view vehicleExists(_vehicleId) returns (address[] memory) {
 		Vehicle storage vehicle = vehicles[_vehicleId];
 		return vehicle.owners;
 	}
@@ -248,19 +232,13 @@ contract CarWatch {
 		return authorizedAddresses[_address];
 	}
 
-	function authorizeAddress(address _address) public onlyContractOwner() {
-		require(_address != address(0), "Invalid address");
-
+	function authorizeAddress(address _address) public onlyContractOwner() requireValidAddress(_address) {
 		authorizedAddresses[_address] = true;
-
 		emit AddressAuthorized(_address);
 	}
 
-	function revokeAddress(address _address) public onlyContractOwner() {
-		require(_address != address(0), "Invalid address");
-
+	function revokeAddress(address _address) public onlyContractOwner() requireValidAddress(_address) {
 		authorizedAddresses[_address] = false;
-
 		emit AddressRevoked(_address);
 	}
 }
