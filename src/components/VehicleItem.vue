@@ -14,7 +14,7 @@
 		</div>
 		<div class="item-container">
 			<span class="label">Current owner</span>
-			<span class="value">{{ vehicle.owner }}</span>
+			<span class="value address">{{ vehicle.owner }}</span>
 		</div>
 		<router-link :to="{ name: 'vehicle', 'params': { 'id': 1 } }" class="item-container action">
 			<button class="button">MORE</button>
@@ -59,6 +59,10 @@ export default {
 
 .value {
 	padding: 0px 16px;
+}
+
+.address {
+	word-break: break-all;
 }
 
 .action {

@@ -2,7 +2,9 @@
 	<div class="vehicles">
 		<div class="content">
 			<h1 class="heading">Vehicles</h1>
+			<EmptyListMessage v-if="vehicles.length == 0" />
 			<VehicleItem v-for="vehicle in vehicles" v-bind:key="vehicle" :vehicle="vehicle"/>
+			<ErrorMessage :message="errorMessage" v-if="errorMessage != ''" />
 			<div class="button-container">
 				<router-link :to="{ name: 'vehicleNew' }" class="action">
 					<button class="button">ADD NEW</button>
@@ -16,11 +18,12 @@
 </template>
 
 <script>
-// @ is an alias to /src
+import EmptyListMessage from '@/components/EmptyListMessage.vue'
 import VehicleItem from '@/components/VehicleItem.vue'
+import ErrorMessage from '@/components/ErrorMessage.vue'
 
 export default {
-	name: 'VehicleView',
+	name: 'VehiclesView',
 	async mounted() {
 		console.log("Generating data...");
 		// await generateData();
@@ -35,6 +38,8 @@ export default {
 		// console.log("Started");
 		// await transferOwnership(1, "0x70997970C51812dc3A010C7d01b50e0d17dc79C8");
 		// console.log("Ended");
+
+		// this.errorMessage = "something broke";
 	},
 	data() {
 		return {
@@ -60,11 +65,14 @@ export default {
 					"year": "111",
 					"owner": "111",
 				}
-			]
+			],
+			errorMessage: ""
 		}
 	},
 	components: {
-		VehicleItem
+		EmptyListMessage,
+		VehicleItem,
+		ErrorMessage
 	},
 	props: {
 		msg: String

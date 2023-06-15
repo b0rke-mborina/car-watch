@@ -7,7 +7,7 @@
 		<div class="item-container">
 			<span class="label">Address</span>
 			<router-link :to="{ name: 'owner', 'params': { 'address': owner.address } }" class="action">
-				<span class="value">{{ owner.address }}</span>
+				<span class="value address">{{ owner.address }}</span>
 			</router-link>
 		</div>
 	</div>
@@ -63,6 +63,10 @@ export default {
 
 .value {
 	padding: 0px 16px;
+}
+
+.address {
+	word-break: break-all;
 }
 
 .action {

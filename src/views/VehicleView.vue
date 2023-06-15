@@ -3,6 +3,7 @@
 		<div class="content">
 			<h1 class="heading">Vehicle {{ this.$route.params.id }}</h1>
 			<div class="vehicle-info">
+				<ErrorMessage :message="fetchingErrorMessage" v-if="fetchingErrorMessage != ''" />
 				<div class="info-group">
 					<span class="label">VIN</span>
 					<input v-model="vehicle.vin" type="text" readonly class="input" />
@@ -34,6 +35,7 @@
 							<button @click="saveOwner" class="button-finish-change">SAVE</button>
 							<button @click="cancelChangingOwner" class="button-finish-change">CANCEL</button>
 						</div>
+						<ErrorMessage :message="addingErrorMessage" v-if="addingErrorMessage != ''" />
 					</div>
 				</div>
 			</div>
@@ -50,12 +52,13 @@
 					<button id="insurances" @click="changeItems('insurances')"
 							  :class="`button-item ${selectedList == 'insurances' ? 'active' : ''}`">Insurances</button>
 					<button id="owners" @click="changeItems('owners')"
-							  :class="`button-item ${selectedList == 'owners' ? 'active' : ''}`">Previous owners</button>
+							  :class="`button-item ${selectedList == 'owners' ? 'active' : ''}`">Owners</button>
 				</div>
 				<div v-if="selectedList == 'owners'" class="list">
 					<OwnerItem v-for="owner in owners" v-bind:key="owner" :owner="owner" />
 				</div>
 				<div v-else class="list">
+					<EmptyListMessage v-if="items.length == 0" />
 					<ListItem v-for="item in items" v-bind:key="item" :item="item" />
 					<div v-if="isAuthorized && isAdding && selectedList != 'owners'" class="list-new-item">
 						<div class="new-item-data">
@@ -68,6 +71,7 @@
 						</div>
 					</div>
 				</div>
+				<ErrorMessage :message="addingErrorMessage" v-if="addingErrorMessage != '' && isAuthorized" />
 				<div class="list-button-container">
 					<button id="breakdowns" @click="handleAddingItem" class="button-add">ADD NEW</button>
 				</div>
@@ -82,8 +86,10 @@
 </template>
 
 <script>
+import EmptyListMessage from '@/components/EmptyListMessage.vue'
 import OwnerItem from '@/components/OwnerItem.vue'
 import ListItem from '@/components/ListItem.vue'
+import ErrorMessage from '@/components/ErrorMessage.vue'
 
 export default {
 	name: 'VehicleView',
@@ -127,7 +133,10 @@ export default {
 			selectedList: "breakdowns",
 			isChanging: false,
 			isAdding: false,
-			newItemDescription: ""
+			newItemDescription: "",
+			fetchingErrorMessage: "",
+			changingErrorMessage: "",
+			addingErrorMessage: ""
 		}
 	},
 	mounted() {
@@ -171,8 +180,10 @@ export default {
 		}
 	},
 	components: {
+		EmptyListMessage,
 		OwnerItem,
-		ListItem
+		ListItem,
+		ErrorMessage
 	},
 	props: {
 		vehicleId: String

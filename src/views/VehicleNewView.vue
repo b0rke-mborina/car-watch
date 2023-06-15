@@ -24,6 +24,7 @@
 					<input v-model="vehicle.owner" type="text" class="input" />
 				</div>
 			</div>
+			<ErrorMessage :message="errorMessage" v-if="errorMessage != ''" />
 			<div class="button-container">
 				<button @click="saveVehicle" class="button">SAVE</button>
 				<router-link :to="{ name: 'vehicles', 'params': { 'id': vehicle.id } }" class="action">
@@ -35,42 +36,27 @@
 </template>
 
 <script>
-import OwnerItem from '@/components/OwnerItem.vue'
-import ListItem from '@/components/ListItem.vue'
+import ErrorMessage from '@/components/ErrorMessage.vue'
 
 export default {
 	name: 'VehicleNewView',
 	data() {
 		return {
 			vehicle: {
-				"id": 1,
 				"vin": "",
 				"make": "",
 				"model": "",
 				"year": "",
 				"owner": ""
 			},
-			items: [],
-			owners: [],
-			isAuthorized: true,
-			selectedList: "breakdowns",
-			isChanging: false
+			errorMessage: ""
 		}
 	},
 	mounted() {
 		console.log("OK");
-		this.vehicle.id = this.$route.params.id;
-		this.items = this.vehicle.breakdowns;
-		this.owners = this.vehicle.owners;
-	},
-	methods: {
-		saveVehicle() {
-			this.isChanging = false;
-		},
 	},
 	components: {
-		OwnerItem,
-		ListItem
+		ErrorMessage
 	},
 	props: {
 		vehicleId: String
