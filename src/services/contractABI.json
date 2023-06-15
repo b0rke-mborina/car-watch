@@ -321,61 +321,61 @@
 		"outputs": [
 			{
 				"components": [
-				{
-					"internalType": "string",
-					"name": "vin",
-					"type": "string"
-				},
-				{
-					"internalType": "string",
-					"name": "make",
-					"type": "string"
-				},
-				{
-					"internalType": "string",
-					"name": "model",
-					"type": "string"
-				},
-				{
-					"internalType": "uint256",
-					"name": "year",
-					"type": "uint256"
-				},
-				{
-					"internalType": "address",
-					"name": "currentOwner",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256[]",
-					"name": "breakdowns",
-					"type": "uint256[]"
-				},
-				{
-					"internalType": "uint256[]",
-					"name": "damages",
-					"type": "uint256[]"
-				},
-				{
-					"internalType": "uint256[]",
-					"name": "services",
-					"type": "uint256[]"
-				},
-				{
-					"internalType": "uint256[]",
-					"name": "repairs",
-					"type": "uint256[]"
-				},
-				{
-					"internalType": "uint256[]",
-					"name": "insurances",
-					"type": "uint256[]"
-				},
-				{
-					"internalType": "address[]",
-					"name": "owners",
-					"type": "address[]"
-				}
+					{
+						"internalType": "string",
+						"name": "vin",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "make",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "model",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "year",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "currentOwner",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "breakdowns",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "damages",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "services",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "repairs",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "insurances",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "address[]",
+						"name": "owners",
+						"type": "address[]"
+					}
 				],
 				"internalType": "struct CarWatch.Vehicle[]",
 				"name": "",
@@ -415,54 +415,151 @@
 		"name": "getVehicle",
 		"outputs": [
 			{
-				"internalType": "string",
+				"components": [
+					{
+						"internalType": "string",
+						"name": "vin",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "make",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "model",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "year",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "currentOwner",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "breakdowns",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "damages",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "services",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "repairs",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "insurances",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "address[]",
+						"name": "owners",
+						"type": "address[]"
+					}
+				],
+				"internalType": "struct CarWatch.Vehicle",
 				"name": "",
-				"type": "string"
+				"type": "tuple"
 			},
 			{
-				"internalType": "string",
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"internalType": "struct CarWatch.Item[]",
 				"name": "",
-				"type": "string"
+				"type": "tuple[]"
 			},
 			{
-				"internalType": "string",
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"internalType": "struct CarWatch.Item[]",
 				"name": "",
-				"type": "string"
+				"type": "tuple[]"
 			},
 			{
-				"internalType": "uint256",
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"internalType": "struct CarWatch.Item[]",
 				"name": "",
-				"type": "uint256"
+				"type": "tuple[]"
 			},
 			{
-				"internalType": "address",
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"internalType": "struct CarWatch.Item[]",
 				"name": "",
-				"type": "address"
+				"type": "tuple[]"
 			},
 			{
-				"internalType": "uint256[]",
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"internalType": "struct CarWatch.Item[]",
 				"name": "",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "",
-				"type": "uint256[]"
+				"type": "tuple[]"
 			}
 		],
 		"stateMutability": "view",
@@ -479,9 +576,21 @@
 		"name": "getVehicleBreakdowns",
 		"outputs": [
 			{
-				"internalType": "uint256[]",
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"internalType": "struct CarWatch.Item[]",
 				"name": "",
-				"type": "uint256[]"
+				"type": "tuple[]"
 			}
 		],
 		"stateMutability": "view",
@@ -498,9 +607,21 @@
 		"name": "getVehicleDamages",
 		"outputs": [
 			{
-				"internalType": "uint256[]",
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"internalType": "struct CarWatch.Item[]",
 				"name": "",
-				"type": "uint256[]"
+				"type": "tuple[]"
 			}
 		],
 		"stateMutability": "view",
@@ -517,9 +638,21 @@
 		"name": "getVehicleInsurances",
 		"outputs": [
 			{
-				"internalType": "uint256[]",
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"internalType": "struct CarWatch.Item[]",
 				"name": "",
-				"type": "uint256[]"
+				"type": "tuple[]"
 			}
 		],
 		"stateMutability": "view",
@@ -555,9 +688,21 @@
 		"name": "getVehicleRepairs",
 		"outputs": [
 			{
-				"internalType": "uint256[]",
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"internalType": "struct CarWatch.Item[]",
 				"name": "",
-				"type": "uint256[]"
+				"type": "tuple[]"
 			}
 		],
 		"stateMutability": "view",
@@ -574,9 +719,21 @@
 		"name": "getVehicleServices",
 		"outputs": [
 			{
-				"internalType": "uint256[]",
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"internalType": "struct CarWatch.Item[]",
 				"name": "",
-				"type": "uint256[]"
+				"type": "tuple[]"
 			}
 		],
 		"stateMutability": "view",

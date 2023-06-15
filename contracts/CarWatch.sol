@@ -16,8 +16,18 @@ contract CarWatch {
 		address[] owners;
 	}
 
+	struct Item {
+		uint256 timestamp;
+		string description;
+	}
+
 	address private contractOwner;
 	mapping(uint256 => Vehicle) private vehicles;
+	mapping(uint256 => Item) private breakdowns;
+	mapping(uint256 => Item) private damages;
+	mapping(uint256 => Item) private services;
+	mapping(uint256 => Item) private repairs;
+	mapping(uint256 => Item) private insurances;
 	mapping(address => uint256[]) private ownerVehicles;
 	mapping(address => bool) private authorizedAddresses;
 	uint256 private vehicleCount;
@@ -55,7 +65,7 @@ contract CarWatch {
 
 	modifier onlyOwner(uint256 _vehicleId) {
 		Vehicle storage vehicle = vehicles[_vehicleId];
-		require(msg.sender == vehicle.currentOwner, "Only the current owner can perform this action");
+		require(msg.sender == vehicle.currentOwner, "Only the current owner of the vehicle can perform this action");
 		_;
 	}
 
@@ -77,42 +87,17 @@ contract CarWatch {
 		return allVehicles;
 	}
 
-	function getVehicle(uint256 _vehicleId) public view returns (string memory, string memory, string memory, uint256, address, uint256[] memory, uint256[] memory, uint256[] memory, uint256[] memory, uint256[] memory) {
+	function getVehicle(uint256 _vehicleId) public view returns (Vehicle memory, Item[] memory, Item[] memory, Item[] memory, Item[] memory, Item[] memory) { //  string memory, string memory, string memory, uint256, address, uint256[] memory, uint256[] memory, uint256[] memory, uint256[] memory, uint256[] memory) {
 		require(_vehicleId < vehicleCount, "Invalid vehicle ID");
 		Vehicle storage vehicle = vehicles[_vehicleId];
 
-		// Retrieve breakdowns as objects
-		uint256[] memory breakdowns = new uint256[](vehicle.breakdowns.length);
-		for (uint256 i = 0; i < vehicle.breakdowns.length; i++) {
-			breakdowns[i] = vehicle.breakdowns[i];
-		}
+		Item[] memory breakdownsResult = getVehicleBreakdowns(_vehicleId);
+		Item[] memory damagesResult = getVehicleDamages(_vehicleId);
+		Item[] memory servicesResult = getVehicleServices(_vehicleId);
+		Item[] memory repairsResult = getVehicleRepairs(_vehicleId);
+		Item[] memory insurancesResult = getVehicleInsurances(_vehicleId);
 
-		// Retrieve damages as objects
-		uint256[] memory damages = new uint256[](vehicle.damages.length);
-		for (uint256 i = 0; i < vehicle.damages.length; i++) {
-			damages[i] = vehicle.damages[i];
-		}
-
-		// Retrieve services as objects
-		uint256[] memory services = new uint256[](vehicle.services.length);
-		for (uint256 i = 0; i < vehicle.services.length; i++) {
-			services[i] = vehicle.services[i];
-		}
-
-		// Retrieve repairs as objects
-		uint256[] memory repairs = new uint256[](vehicle.repairs.length);
-		for (uint256 i = 0; i < vehicle.repairs.length; i++) {
-			repairs[i] = vehicle.repairs[i];
-		}
-
-		// Retrieve insurances as objects
-		uint256[] memory insurances = new uint256[](vehicle.insurances.length);
-		for (uint256 i = 0; i < vehicle.insurances.length; i++) {
-			insurances[i] = vehicle.insurances[i];
-		}
-
-		return (vehicle.vin, vehicle.make, vehicle.model, vehicle.year, vehicle.currentOwner,
-			breakdowns, damages, services, repairs, insurances);
+		return (vehicle, breakdownsResult, damagesResult, servicesResult, repairsResult, insurancesResult);
 	}
 
 	function registerVehicle(string memory _vin, string memory _make, string memory _model, uint256 _year) public {
@@ -132,6 +117,7 @@ contract CarWatch {
 
 	function transferOwnership(uint256 _vehicleId, address _newOwner) public vehicleExists(_vehicleId) requireValidAddress(_newOwner) onlyOwner(_vehicleId) {
 		Vehicle storage vehicle = vehicles[_vehicleId];
+		require(_newOwner != vehicle.currentOwner, "Ownership cannot be transfered to oneself");
 		address previousOwner = vehicle.currentOwner;
 
 		vehicle.currentOwner = _newOwner;
@@ -146,6 +132,7 @@ contract CarWatch {
 	function addBreakdown(uint256 _vehicleId, string memory _description) public vehicleExists(_vehicleId) requireDescription(_description) onlyAuthorized {
 		Vehicle storage vehicle = vehicles[_vehicleId];
 		vehicle.breakdowns.push(block.timestamp);
+		breakdowns[block.timestamp] = Item(block.timestamp, _description);
 
 		emit BreakdownAdded(_vehicleId, _description);
 	}
@@ -153,6 +140,7 @@ contract CarWatch {
 	function addDamage(uint256 _vehicleId, string memory _description) public vehicleExists(_vehicleId) requireDescription(_description) onlyAuthorized {
 		Vehicle storage vehicle = vehicles[_vehicleId];
 		vehicle.damages.push(block.timestamp);
+		damages[block.timestamp] = Item(block.timestamp, _description);
 
 		emit DamageAdded(_vehicleId, _description);
 	}
@@ -160,6 +148,7 @@ contract CarWatch {
 	function addService(uint256 _vehicleId, string memory _description) public vehicleExists(_vehicleId) requireDescription(_description) onlyAuthorized {
 		Vehicle storage vehicle = vehicles[_vehicleId];
 		vehicle.services.push(block.timestamp);
+		services[block.timestamp] = Item(block.timestamp, _description);
 
 		emit ServiceAdded(_vehicleId, _description);
 	}
@@ -167,6 +156,7 @@ contract CarWatch {
 	function addRepair(uint256 _vehicleId, string memory _description) public vehicleExists(_vehicleId) requireDescription(_description) onlyAuthorized {
 		Vehicle storage vehicle = vehicles[_vehicleId];
 		vehicle.repairs.push(block.timestamp);
+		repairs[block.timestamp] = Item(block.timestamp, _description);
 
 		emit RepairAdded(_vehicleId, _description);
 	}
@@ -174,33 +164,64 @@ contract CarWatch {
 	function addInsurance(uint256 _vehicleId, string memory _description) public vehicleExists(_vehicleId) requireDescription(_description) onlyAuthorized {
 		Vehicle storage vehicle = vehicles[_vehicleId];
 		vehicle.insurances.push(block.timestamp);
+		insurances[block.timestamp] = Item(block.timestamp, _description);
 
 		emit InsuranceAdded(_vehicleId, _description);
 	}
 
-	function getVehicleBreakdowns(uint256 _vehicleId) public view vehicleExists(_vehicleId) returns (uint256[] memory) {
+	function getVehicleBreakdowns(uint256 _vehicleId) public view vehicleExists(_vehicleId) returns (Item[] memory) {
 		Vehicle storage vehicle = vehicles[_vehicleId];
-		return vehicle.breakdowns;
+		Item[] memory result = new Item[](vehicle.breakdowns.length);
+		
+		for (uint256 i = 0; i < vehicle.breakdowns.length; i++) {
+			result[i] = breakdowns[vehicle.breakdowns[i]];
+		}
+
+		return result;
 	}
 
-	function getVehicleDamages(uint256 _vehicleId) public view vehicleExists(_vehicleId) returns (uint256[] memory) {
+	function getVehicleDamages(uint256 _vehicleId) public view vehicleExists(_vehicleId) returns (Item[] memory) {
 		Vehicle storage vehicle = vehicles[_vehicleId];
-		return vehicle.damages;
+		Item[] memory result = new Item[](vehicle.damages.length);
+		
+		for (uint256 i = 0; i < vehicle.damages.length; i++) {
+			result[i] = damages[vehicle.damages[i]];
+		}
+
+		return result;
 	}
 
-	function getVehicleServices(uint256 _vehicleId) public view vehicleExists(_vehicleId) returns (uint256[] memory) {
+	function getVehicleServices(uint256 _vehicleId) public view vehicleExists(_vehicleId) returns (Item[] memory) {
 		Vehicle storage vehicle = vehicles[_vehicleId];
-		return vehicle.services;
+		Item[] memory result = new Item[](vehicle.services.length);
+		
+		for (uint256 i = 0; i < vehicle.services.length; i++) {
+			result[i] = services[vehicle.services[i]];
+		}
+
+		return result;
 	}
 
-	function getVehicleRepairs(uint256 _vehicleId) public view vehicleExists(_vehicleId) returns (uint256[] memory) {
+	function getVehicleRepairs(uint256 _vehicleId) public view vehicleExists(_vehicleId) returns (Item[] memory) {
 		Vehicle storage vehicle = vehicles[_vehicleId];
-		return vehicle.repairs;
+		Item[] memory result = new Item[](vehicle.repairs.length);
+		
+		for (uint256 i = 0; i < vehicle.repairs.length; i++) {
+			result[i] = repairs[vehicle.repairs[i]];
+		}
+
+		return result;
 	}
 
-	function getVehicleInsurances(uint256 _vehicleId) public view vehicleExists(_vehicleId) returns (uint256[] memory) {
+	function getVehicleInsurances(uint256 _vehicleId) public view vehicleExists(_vehicleId) returns (Item[] memory) {
 		Vehicle storage vehicle = vehicles[_vehicleId];
-		return vehicle.insurances;
+		Item[] memory result = new Item[](vehicle.insurances.length);
+		
+		for (uint256 i = 0; i < vehicle.insurances.length; i++) {
+			result[i] = insurances[vehicle.insurances[i]];
+		}
+
+		return result;
 	}
 
 	function getVehicleOwners(uint256 _vehicleId) public view vehicleExists(_vehicleId) returns (address[] memory) {
