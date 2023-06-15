@@ -4,6 +4,9 @@
 			<h1 class="heading">Vehicles</h1>
 			<VehicleItem v-for="vehicle in vehicles" v-bind:key="vehicle" :vehicle="vehicle"/>
 			<div class="button-container">
+				<router-link :to="{ name: 'vehicleNew' }" class="action">
+					<button class="button">ADD NEW</button>
+				</router-link>
 				<router-link :to="{ name: 'home' }" class="action">
 					<button class="button">BACK</button>
 				</router-link>
@@ -96,6 +99,7 @@ export default {
 	text-decoration: none;
 	text-align: center;
 	color: #000000 !important;
+	margin: 0px 4px;
 }
 
 .button {
