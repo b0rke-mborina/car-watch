@@ -3,7 +3,7 @@
 		<div class="content">
 			<h1 class="heading">Vehicle {{ this.$route.params.id }}</h1>
 			<div class="vehicle-info">
-				<ErrorMessage :message="fetchingErrorMessage" v-if="fetchingErrorMessage != ''" />
+				<ErrorMessage :message="fetchingErrorMessage" v-if="fetchingErrorMessage !== ''" />
 				<div class="info-group">
 					<span class="label">VIN</span>
 					<input v-model="vehicle.vin" type="text" readonly class="input" />
@@ -27,7 +27,7 @@
 							:to="{ name: 'owner', 'params': { 'address': vehicle.currentOwner } }" class="action">
 							<input v-model="vehicle.currentOwner" type="text" readonly class="input-changeable-link" />
 						</router-link>
-						<input v-model="vehicle.currentOwner" v-if="!isChanging && vehicle.currentOwner == ''"
+						<input v-model="vehicle.currentOwner" v-if="!isChanging && vehicle.currentOwner === ''"
 							type="text" readonly class="input-changeable" />
 						<input v-model="vehicle.currentOwner" v-if="isChanging" type="text" class="input-changeable" />
 						<button v-if="isAuthorized && !isChanging" @click="changeOwner" class="button-change">CHANGE</button>
@@ -41,30 +41,30 @@
 							<button @click="cancelChangingOwner" class="button-finish-change">CANCEL</button>
 						</div>
 					</div>
-					<ErrorMessage :message="changingErrorMessage" v-if="changingErrorMessage != ''" />
+					<ErrorMessage :message="changingErrorMessage" v-if="changingErrorMessage !== ''" />
 				</div>
 			</div>
 			<div class="lists">
 				<div class="list-options">
 					<button id="breakdowns" @click="changeItems('breakdowns')"
-							  :class="`button-item ${selectedList == 'breakdowns' ? 'active' : ''}`">Breakdowns</button>
+							  :class="`button-item ${selectedList === 'breakdowns' ? 'active' : ''}`">Breakdowns</button>
 					<button id="damages" @click="changeItems('damages')"
-							  :class="`button-item ${selectedList == 'damages' ? 'active' : ''}`">Damages</button>
+							  :class="`button-item ${selectedList === 'damages' ? 'active' : ''}`">Damages</button>
 					<button id="services" @click="changeItems('services')"
-							  :class="`button-item ${selectedList == 'services' ? 'active' : ''}`">Services</button>
+							  :class="`button-item ${selectedList === 'services' ? 'active' : ''}`">Services</button>
 					<button id="repairs" @click="changeItems('repairs')"
-							  :class="`button-item ${selectedList == 'repairs' ? 'active' : ''}`">Repairs</button>
+							  :class="`button-item ${selectedList === 'repairs' ? 'active' : ''}`">Repairs</button>
 					<button id="insurances" @click="changeItems('insurances')"
-							  :class="`button-item ${selectedList == 'insurances' ? 'active' : ''}`">Insurances</button>
+							  :class="`button-item ${selectedList === 'insurances' ? 'active' : ''}`">Insurances</button>
 					<button id="owners" @click="changeItems('owners')"
-							  :class="`button-item ${selectedList == 'owners' ? 'active' : ''}`">Owners</button>
+							  :class="`button-item ${selectedList === 'owners' ? 'active' : ''}`">Owners</button>
 				</div>
-				<div v-if="selectedList == 'owners'" class="list">
-					<EmptyListMessage v-if="owners.length == 0" />
+				<div v-if="selectedList === 'owners'" class="list">
+					<EmptyListMessage v-if="owners.length === 0" />
 					<OwnerItem v-for="owner in owners" v-bind:key="owner" :owner="owner" />
 				</div>
 				<div v-else class="list">
-					<EmptyListMessage v-if="items.length == 0" />
+					<EmptyListMessage v-if="items.length === 0" />
 					<ListItem v-for="item in items" v-bind:key="item" :item="item" />
 					<div v-if="isAuthorized && isAdding && selectedList != 'owners'" class="list-new-item">
 						<div class="new-item-data">
@@ -77,9 +77,9 @@
 						</div>
 					</div>
 				</div>
-				<ErrorMessage :message="addingErrorMessage" v-if="addingErrorMessage != ''" />
+				<ErrorMessage :message="addingErrorMessage" v-if="addingErrorMessage !== ''" />
 				<div class="list-button-container">
-					<button id="breakdowns" v-if="selectedList != 'owners'" @click="handleAddingItem" class="button-add">ADD NEW</button>
+					<button id="breakdowns" v-if="selectedList !== 'owners'" @click="handleAddingItem" class="button-add">ADD NEW</button>
 				</div>
 			</div>
 			<div class="button-container">
@@ -185,9 +185,11 @@ export default {
 
 				const vehicleId = parseInt(this.$route.params.id);
 				console.log(vehicleId);
-				// const response = await transferOwnership(vehicleId, this.vehicle.currentOwner);
+				const response = await transferOwnership(vehicleId, this.vehicle.currentOwner);
 				console.log("response");
-				// console.log(response);
+				console.log(response);
+				this.originalOwner = this.vehicle.currentOwner;
+				this.isChanging = false;
 				
 				this.vehicle.owners = await getVehicleOwners(vehicleId);
 				this.owners = this.vehicle.owners;
@@ -198,30 +200,31 @@ export default {
 		},
 		cancelChangingOwner() {
 			this.isChanging = false;
+			this.vehicle.currentOwner = this.originalOwner;
 		},
 		async saveNewItem() {
-			if (this.newItemDescription == "") {
+			if (this.newItemDescription === "") {
 				this.addingErrorMessage = "Description is required.";
 			} else {
 				const vehicleId = parseInt(this.$route.params.id);
 				try {
-					if (this.selectedList == "breakdowns") {
+					if (this.selectedList === "breakdowns") {
 						await addBreakdown(vehicleId, this.newItemDescription);
 						this.vehicle.breakdowns = await getVehicleBreakdowns(vehicleId);
 						this.items = this.vehicle.breakdowns;
-					} else if (this.selectedList == "damages") {
+					} else if (this.selectedList === "damages") {
 						await addDamage(vehicleId, this.newItemDescription);
 						this.vehicle.damages = await getVehicleDamages(vehicleId);
 						this.items = this.vehicle.damages;
-					} else if (this.selectedList == "services") {
+					} else if (this.selectedList === "services") {
 						await addService(vehicleId, this.newItemDescription);
 						this.vehicle.services = await getVehicleServices(vehicleId);
 						this.items = this.vehicle.services;
-					} else if (this.selectedList == "repairs") {
+					} else if (this.selectedList === "repairs") {
 						await addRepair(vehicleId, this.newItemDescription);
 						this.vehicle.repairs = await getVehicleRepairs(vehicleId);
 						this.items = this.vehicle.repairs;
-					} else if (this.selectedList == "insurances") {
+					} else if (this.selectedList === "insurances") {
 						await addInsurance(vehicleId, this.newItemDescription);
 						this.vehicle.insurances = await getVehicleInsurances(vehicleId);
 						this.items = this.vehicle.insurances;

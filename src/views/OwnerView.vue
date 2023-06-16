@@ -4,9 +4,9 @@
 			<h1 class="heading">Owner</h1>
 			<h2 class="subheading">{{ this.$route.params.address }}</h2>
 			<div class="vehicles">
-				<EmptyListMessage v-if="ownerVehicles.length == 0" />
+				<EmptyListMessage v-if="ownerVehicles.length === 0" />
 				<VehicleItem v-for="vehicle in ownerVehicles" v-bind:key="vehicle" :vehicle="vehicle" />
-				<ErrorMessage :message="errorMessage" v-if="errorMessage != ''" />
+				<ErrorMessage :message="errorMessage" v-if="errorMessage !== ''" />
 			</div>
 			<div class="button-container">
 				<button @click="goBack" class="button">BACK</button>

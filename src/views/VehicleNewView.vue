@@ -20,7 +20,7 @@
 					<input v-model="vehicle.year" type="text" class="input" />
 				</div>
 			</div>
-			<ErrorMessage :message="errorMessage" v-if="errorMessage != ''" />
+			<ErrorMessage :message="errorMessage" v-if="errorMessage !== ''" />
 			<div class="button-container">
 				<button @click="saveNewVehicle" class="button">SAVE</button>
 				<router-link :to="{ name: 'vehicles' }" class="action">
@@ -50,7 +50,7 @@ export default {
 	},
 	methods: {
 		async saveNewVehicle() {
-			if (this.vehicle.vin == "" || this.vehicle.make == "" || this.vehicle.model == "" || this.vehicle.year == "") {
+			if (this.vehicle.vin === "" || this.vehicle.make === "" || this.vehicle.model === "" || this.vehicle.year === "") {
 				this.errorMessage = "All values are required.";
 			} else {
 				console.log("Started saving vehicle...");

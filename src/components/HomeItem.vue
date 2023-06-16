@@ -1,12 +1,12 @@
 <template>
 	<div v-if="!item.isIcons" class="item"
-		  :style="{ 'background-color': item.index % 2 == 0 ? '#FFA69E' : '#B30303',
+		  :style="{ 'background-color': item.index % 2 === 0 ? '#FFA69E' : '#B30303',
 		  				'flex-direction': item.inverted ? 'row-reverse' : 'row' }">
 		<div class="content">
 			<div class="item-heading">{{ item.heading }}</div>
 			<div class="item-text">{{ item.text }}</div>
 			<router-link :to="{ name: 'vehicles' }" class="action">
-				<button class="button" :style="{ 'background-color': item.index % 2 == 0 ? '#FFA69E' : '#B30303' }">SEE MORE</button>
+				<button class="button" :style="{ 'background-color': item.index % 2 === 0 ? '#FFA69E' : '#B30303' }">SEE MORE</button>
 			</router-link>
 		</div>
 		<div class="images">
@@ -14,7 +14,7 @@
 			<img :src="require(`@/assets/icons/${this.item.images[1]}`)" class="image" /> 
 		</div>
 	</div>
-	<div v-else class="item-icons" :style="{ 'background-color': item.index % 2 == 0 ? '#FFA69E' : '#B30303' }">
+	<div v-else class="item-icons" :style="{ 'background-color': item.index % 2 === 0 ? '#FFA69E' : '#B30303' }">
 		<div class="item-heading">Manage many vehicle aspects</div>
 		<div class="icons-grid">
 			<div v-for="title in item.titles" v-bind:key="title" class="icons-item">
