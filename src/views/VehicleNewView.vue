@@ -19,15 +19,11 @@
 					<span class="label">Year</span>
 					<input v-model="vehicle.year" type="text" class="input" />
 				</div>
-				<div class="info-group">
-					<span class="label">Owner address</span>
-					<input v-model="vehicle.owner" type="text" class="input" />
-				</div>
 			</div>
 			<ErrorMessage :message="errorMessage" v-if="errorMessage != ''" />
 			<div class="button-container">
-				<button @click="saveVehicle" class="button">SAVE</button>
-				<router-link :to="{ name: 'vehicles', 'params': { 'id': vehicle.id } }" class="action">
+				<button @click="saveNewVehicle" class="button">SAVE</button>
+				<router-link :to="{ name: 'vehicles' }" class="action">
 					<button class="button">CANCEL</button>
 				</router-link>
 			</div>
@@ -36,6 +32,7 @@
 </template>
 
 <script>
+import { registerVehicle } from "@/services"
 import ErrorMessage from '@/components/ErrorMessage.vue'
 
 export default {
@@ -46,14 +43,33 @@ export default {
 				"vin": "",
 				"make": "",
 				"model": "",
-				"year": "",
-				"owner": ""
+				"year": ""
 			},
 			errorMessage: ""
 		}
 	},
-	mounted() {
-		console.log("OK");
+	methods: {
+		async saveNewVehicle() {
+			if (this.vehicle.vin == "" || this.vehicle.make == "" || this.vehicle.model == "" || this.vehicle.year == "") {
+				this.errorMessage = "All values are required.";
+			} else {
+				console.log("Started saving vehicle...");
+				try {
+					this.vehicle.year = parseInt(this.vehicle.year);
+					if (isNaN(this.vehicle.year) || (!isNaN(this.vehicle.year) && this.vehicle.year <= 0)) {
+						this.vehicle.year = "";
+						throw new Error("Year must be a whole number bigger than 0.");
+					}
+
+					this.vehicle = await registerVehicle(this.vehicle.vin, this.vehicle.make, this.vehicle.model, this.vehicle.year);
+					console.log("Vehicle saved");
+					console.log(this.vehicle);
+					this.$router.push({ name: 'vehicles' });
+				} catch (error) {
+					this.errorMessage = error.message;
+				}
+			}
+		}
 	},
 	components: {
 		ErrorMessage
@@ -83,7 +99,7 @@ export default {
 
 .vehicle-info {
 	display: grid;
-	grid-template-rows: repeat(5, 1fr);
+	grid-template-rows: repeat(4, 1fr);
 	gap: 16px;
 }
 

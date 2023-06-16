@@ -27,7 +27,7 @@
 							:to="{ name: 'owner', 'params': { 'address': vehicle.currentOwner } }" class="action">
 							<input v-model="vehicle.currentOwner" type="text" readonly class="input-changeable-link" />
 						</router-link>
-						<input v-model="vehicle.currentOwner" v-if="!isChanging && vehicle.currentOwner == '0'"
+						<input v-model="vehicle.currentOwner" v-if="!isChanging && vehicle.currentOwner == ''"
 							type="text" readonly class="input-changeable" />
 						<input v-model="vehicle.currentOwner" v-if="isChanging" type="text" class="input-changeable" />
 						<button v-if="isAuthorized && !isChanging" @click="changeOwner" class="button-change">CHANGE</button>
@@ -40,8 +40,8 @@
 							<button @click="saveOwner" class="button-finish-change">SAVE</button>
 							<button @click="cancelChangingOwner" class="button-finish-change">CANCEL</button>
 						</div>
-						<ErrorMessage :message="addingErrorMessage" v-if="addingErrorMessage != ''" />
 					</div>
+					<ErrorMessage :message="changingErrorMessage" v-if="changingErrorMessage != ''" />
 				</div>
 			</div>
 			<div class="lists">
@@ -77,7 +77,7 @@
 						</div>
 					</div>
 				</div>
-				<ErrorMessage :message="addingErrorMessage" v-if="addingErrorMessage != '' && isAuthorized" />
+				<ErrorMessage :message="addingErrorMessage" v-if="addingErrorMessage != ''" />
 				<div class="list-button-container">
 					<button id="breakdowns" v-if="selectedList != 'owners'" @click="handleAddingItem" class="button-add">ADD NEW</button>
 				</div>
@@ -92,7 +92,9 @@
 </template>
 
 <script>
-import { getVehicle } from "@/services"
+import { ethers } from 'ethers';
+import { getVehicle, transferOwnership, getVehicleOwners, addBreakdown, addDamage, addService, addRepair, addInsurance } from "@/services"
+import { getVehicleBreakdowns, getVehicleDamages, getVehicleServices, getVehicleRepairs, getVehicleInsurances } from "@/services"
 import EmptyListMessage from '@/components/EmptyListMessage.vue'
 import OwnerItem from '@/components/OwnerItem.vue'
 import ListItem from '@/components/ListItem.vue'
@@ -136,6 +138,7 @@ export default {
 			},
 			items: [],
 			owners: [],
+			originalOwner: "",
 			isAuthorized: true,
 			selectedList: "breakdowns",
 			isChanging: false,
@@ -160,6 +163,7 @@ export default {
 		
 		this.items = this.vehicle.breakdowns;
 		this.owners = this.vehicle.owners;
+		this.originalOwner = this.vehicle.currentOwner;
 	},
 	methods: {
 		changeItems(type) {
@@ -169,17 +173,67 @@ export default {
 			console.log(this.selectedList);
 		},
 		changeOwner() {
+			this.changingErrorMessage = "";
 			this.isChanging = true;
 		},
-		saveOwner() {
-			this.isChanging = false;
+		async saveOwner() {
+			try {
+				if (!ethers.utils.isAddress(this.vehicle.currentOwner)) {
+					this.vehicle.currentOwner = this.originalOwner;
+					throw new Error("Address of the new owner must be valid.");
+				}
+
+				const vehicleId = parseInt(this.$route.params.id);
+				console.log(vehicleId);
+				// const response = await transferOwnership(vehicleId, this.vehicle.currentOwner);
+				console.log("response");
+				// console.log(response);
+				
+				this.vehicle.owners = await getVehicleOwners(vehicleId);
+				this.owners = this.vehicle.owners;
+			} catch (error) {
+				this.isChanging = false;
+				this.changingErrorMessage = error.message;
+			}
 		},
 		cancelChangingOwner() {
 			this.isChanging = false;
 		},
-		saveNewItem() {
-			this.isAdding = false;
-			this.newItemDescription = "";
+		async saveNewItem() {
+			if (this.newItemDescription == "") {
+				this.addingErrorMessage = "Description is required.";
+			} else {
+				const vehicleId = parseInt(this.$route.params.id);
+				try {
+					if (this.selectedList == "breakdowns") {
+						await addBreakdown(vehicleId, this.newItemDescription);
+						this.vehicle.breakdowns = await getVehicleBreakdowns(vehicleId);
+						this.items = this.vehicle.breakdowns;
+					} else if (this.selectedList == "damages") {
+						await addDamage(vehicleId, this.newItemDescription);
+						this.vehicle.damages = await getVehicleDamages(vehicleId);
+						this.items = this.vehicle.damages;
+					} else if (this.selectedList == "services") {
+						await addService(vehicleId, this.newItemDescription);
+						this.vehicle.services = await getVehicleServices(vehicleId);
+						this.items = this.vehicle.services;
+					} else if (this.selectedList == "repairs") {
+						await addRepair(vehicleId, this.newItemDescription);
+						this.vehicle.repairs = await getVehicleRepairs(vehicleId);
+						this.items = this.vehicle.repairs;
+					} else if (this.selectedList == "insurances") {
+						await addInsurance(vehicleId, this.newItemDescription);
+						this.vehicle.insurances = await getVehicleInsurances(vehicleId);
+						this.items = this.vehicle.insurances;
+					}
+					this.isAdding = false;
+					this.newItemDescription = "";
+				} catch (error) {
+					// this.isAdding = false;
+					this.addingErrorMessage = error.message;
+					this.newItemDescription = "";
+				}
+			}
 		},
 		cancelAddingNewItem() {
 			this.isAdding = false;

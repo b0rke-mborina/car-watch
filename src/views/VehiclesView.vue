@@ -54,9 +54,9 @@ export default {
 		}
 	},
 	async mounted() {
-		console.log("Generating data...");
+		// console.log("Generating data...");
 		// await generateData();
-		console.log("Data generated.");
+		// console.log("Data generated.");
 
 		console.log("Started getter");
 		try {
@@ -66,6 +66,7 @@ export default {
 			this.errorMessage = error.message;
 		}
 		console.log("Ended getter");
+		
 		// console.log("Started");
 		// await transferOwnership(1, "0x70997970C51812dc3A010C7d01b50e0d17dc79C8");
 		// console.log("Ended");

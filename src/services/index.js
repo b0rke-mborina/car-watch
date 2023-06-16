@@ -12,8 +12,7 @@ export async function getAllVehicles() {
 		vehicles = vehicles.map(vehicle => ({...vehicle, "id": vehicles.indexOf(vehicle)}));
 		return vehicles;
 	} catch (error) {
-		console.error(error);
-		throw new Error(error)
+		throw new Error(error.message);
 	}
 }
 
@@ -27,12 +26,10 @@ export async function getVehicle(vehicleId) {
 		vehicle.services = [...data[3]];
 		vehicle.repairs = [...data[4]];
 		vehicle.insurances = [...data[5]];
-		// vehicle.breakdowns = vehicle.breakdowns.map(breakdown => ({ "timestamp": breakdown[0], "description" }));
-		console.log("vehicle");
 		console.log(vehicle);
 		return vehicle;
 	} catch (error) {
-		console.error(error);
+		throw new Error(error.message);
 	}
 }
 
@@ -44,7 +41,7 @@ export async function registerVehicle(vehicleVin, vehicleMake, vehicleModel, veh
 		await transaction.wait();
 		console.log(transaction);
 	} catch (error) {
-		console.error(error);
+		throw new Error(error.message);
 	}
 }
 
@@ -58,7 +55,7 @@ export async function transferOwnership(vehicleId, newOwner) {
 		await transaction.wait();
 		console.log(transaction);
 	} catch (error) {
-		console.error(error);
+		throw new Error(error.message);
 	}
 }
 
@@ -70,7 +67,7 @@ export async function addBreakdown(vehicleId, description) {
 		await transaction.wait();
 		console.log(transaction);
 	} catch (error) {
-		console.error(error);
+		throw new Error(error.message);
 	}
 }
 
@@ -82,7 +79,7 @@ export async function addDamage(vehicleId, description) {
 		await transaction.wait();
 		console.log(transaction);
 	} catch (error) {
-		console.error(error);
+		throw new Error(error.message);
 	}
 }
 
@@ -94,7 +91,7 @@ export async function addService(vehicleId, description) {
 		await transaction.wait();
 		console.log(transaction);
 	} catch (error) {
-		console.error(error);
+		throw new Error(error.message);
 	}
 }
 
@@ -106,7 +103,7 @@ export async function addRepair(vehicleId, description) {
 		await transaction.wait();
 		console.log(transaction);
 	} catch (error) {
-		console.error(error);
+		throw new Error(error.message);
 	}
 }
 
@@ -118,7 +115,7 @@ export async function addInsurance(vehicleId, description) {
 		await transaction.wait();
 		console.log(transaction);
 	} catch (error) {
-		console.error(error);
+		throw new Error(error.message);
 	}
 }
 
@@ -126,8 +123,9 @@ export async function getVehicleBreakdowns(vehicleId) {
 	try {
 		const vehicleBreakdowns = await contract.getVehicleBreakdowns(vehicleId);
 		console.log(vehicleBreakdowns);
+		return vehicleBreakdowns;
 	} catch (error) {
-		console.error(error);
+		throw new Error(error.message);
 	}
 }
 
@@ -135,8 +133,9 @@ export async function getVehicleDamages(vehicleId) {
 	try {
 		const vehicleDamages = await contract.getVehicleDamages(vehicleId);
 		console.log(vehicleDamages);
+		return vehicleDamages;
 	} catch (error) {
-		console.error(error);
+		throw new Error(error.message);
 	}
 }
 
@@ -144,8 +143,9 @@ export async function getVehicleServices(vehicleId) {
 	try {
 		const vehicleServices = await contract.getVehicleServices(vehicleId);
 		console.log(vehicleServices);
+		return vehicleServices;
 	} catch (error) {
-		console.error(error);
+		throw new Error(error.message);
 	}
 }
 
@@ -153,8 +153,9 @@ export async function getVehicleRepairs(vehicleId) {
 	try {
 		const vehicleRepairs = await contract.getVehicleRepairs(vehicleId);
 		console.log(vehicleRepairs);
+		return vehicleRepairs;
 	} catch (error) {
-		console.error(error);
+		throw new Error(error.message);
 	}
 }
 
@@ -162,6 +163,8 @@ export async function getVehicleInsurances(vehicleId) {
 	try {
 		const vehicleInsurances = await contract.getVehicleInsurances(vehicleId);
 		console.log(vehicleInsurances);
+		// vehicleInsurances = vehicleInsurances.map(vehicle => ({...vehicle, "id": vehicleInsurances.indexOf(vehicle)}));
+		return vehicleInsurances;
 	} catch (error) {
 		console.error(error);
 	}
@@ -171,8 +174,9 @@ export async function getVehicleOwners(vehicleId) {
 	try {
 		const vehicleOwners = await contract.getVehicleOwners(vehicleId);
 		console.log(vehicleOwners);
+		return vehicleOwners;
 	} catch (error) {
-		console.error(error);
+		throw new Error(error.message);
 	}
 }
 
@@ -183,19 +187,7 @@ export async function getOwnerVehicles(ownerAddress) {
 		ownerVehicles = ownerVehicles.map(vehicle => ({...vehicle, "id": ownerVehicles.indexOf(vehicle)}));
 		return ownerVehicles;
 	} catch (error) {
-		console.error(error);
-	}
-}
-
-export async function removeVehicleFromOwner(ownerAddress, vehicleId) {
-	try {
-		const signer = provider.getSigner();
-		const contractWithSigner = contract.connect(signer);
-		const transaction = await contractWithSigner.removeVehicleFromOwner(ownerAddress, vehicleId);
-		await transaction.wait();
-		console.log(transaction);
-	} catch (error) {
-		console.error(error);
+		throw new Error(error.message);
 	}
 }
 
@@ -204,7 +196,7 @@ export async function isAuthorizedAddress(address) {
 		const isAuthorized = await contract.isAuthorizedAddress(address);
 		console.log(isAuthorized);
 	} catch (error) {
-		console.error(error);
+		throw new Error(error.message);
 	}
 }
 
@@ -216,7 +208,7 @@ export async function authorizeAddress(address) {
 		await transaction.wait();
 		console.log(transaction);
 	} catch (error) {
-		console.error(error);
+		throw new Error(error.message);
 	}
 }
 
@@ -228,7 +220,7 @@ export async function revokeAddress(address) {
 		await transaction.wait();
 		console.log(transaction);
 	} catch (error) {
-		console.error(error);
+		throw new Error(error.message);
 	}
 }
 
@@ -250,6 +242,6 @@ export async function generateData() {
 		await transaction.wait();
 		console.log(transaction);
 	} catch (error) {
-		console.error(error);
+		throw new Error(error.message);
 	}
 }
