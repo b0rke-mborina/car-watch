@@ -23,8 +23,13 @@
 				<div class="info-group">
 					<span class="label">Current owner</span>
 					<div v-if="isAuthorized" class="info-group-item">
-						<input v-model="vehicle.owner" v-if="!isChanging" type="text" readonly class="input-changeable" />
-						<input v-model="vehicle.owner" v-if="isChanging" type="text" class="input-changeable" />
+						<router-link v-if="!isChanging && vehicle.currentOwner != ''"
+							:to="{ name: 'owner', 'params': { 'address': vehicle.currentOwner } }" class="action">
+							<input v-model="vehicle.currentOwner" type="text" readonly class="input-changeable-link" />
+						</router-link>
+						<input v-model="vehicle.currentOwner" v-if="!isChanging && vehicle.currentOwner == '0'"
+							type="text" readonly class="input-changeable" />
+						<input v-model="vehicle.currentOwner" v-if="isChanging" type="text" class="input-changeable" />
 						<button v-if="isAuthorized && !isChanging" @click="changeOwner" class="button-change">CHANGE</button>
 					</div>
 				</div>
@@ -55,6 +60,7 @@
 							  :class="`button-item ${selectedList == 'owners' ? 'active' : ''}`">Owners</button>
 				</div>
 				<div v-if="selectedList == 'owners'" class="list">
+					<EmptyListMessage v-if="owners.length == 0" />
 					<OwnerItem v-for="owner in owners" v-bind:key="owner" :owner="owner" />
 				</div>
 				<div v-else class="list">
@@ -73,7 +79,7 @@
 				</div>
 				<ErrorMessage :message="addingErrorMessage" v-if="addingErrorMessage != '' && isAuthorized" />
 				<div class="list-button-container">
-					<button id="breakdowns" @click="handleAddingItem" class="button-add">ADD NEW</button>
+					<button id="breakdowns" v-if="selectedList != 'owners'" @click="handleAddingItem" class="button-add">ADD NEW</button>
 				</div>
 			</div>
 			<div class="button-container">
@@ -86,6 +92,7 @@
 </template>
 
 <script>
+import { getVehicle } from "@/services"
 import EmptyListMessage from '@/components/EmptyListMessage.vue'
 import OwnerItem from '@/components/OwnerItem.vue'
 import ListItem from '@/components/ListItem.vue'
@@ -96,13 +103,13 @@ export default {
 	data() {
 		return {
 			vehicle: {
-				"id": 1,
-				"vin": "111",
-				"make": "222",
-				"model": "333",
-				"year": "444",
-				"owner": "555",
-				"breakdowns": [
+				"id": "",
+				"vin": "",
+				"make": "",
+				"model": "",
+				"year": "",
+				"currentOwner": "",
+				"breakdowns": [/*
 					{
 						"timestamp": 1686763423,
 						"description": "it was ericsson"
@@ -111,12 +118,12 @@ export default {
 						"timestamp": 1686763433,
 						"description": "ericsson's fault again"
 					}
-				],
+				*/],
 				"damages": [],
 				"services": [],
 				"repairs": [],
 				"insurances": [],
-				"owners": [
+				"owners": [/*
 					{
 						"timestamp": 1686763423,
 						"address": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
@@ -125,7 +132,7 @@ export default {
 						"timestamp": 1686763433,
 						"address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
 					}
-				]
+				*/]
 			},
 			items: [],
 			owners: [],
@@ -139,9 +146,18 @@ export default {
 			addingErrorMessage: ""
 		}
 	},
-	mounted() {
-		console.log("OK");
+	async mounted() {
 		this.vehicle.id = this.$route.params.id;
+
+		console.log("Started getter");
+		try {
+			this.vehicle = await getVehicle(this.vehicle.id);
+			console.log(this.vehicle);
+		} catch (error) {
+			this.fetchingErrorMessage = error.message;
+		}
+		console.log("Ended getter");
+		
 		this.items = this.vehicle.breakdowns;
 		this.owners = this.vehicle.owners;
 	},
@@ -228,6 +244,7 @@ export default {
 .info-group-item {
 	display: flex;
 	flex-direction: row;
+	justify-content: right;
 }
 
 .info-group-item-changeable {
@@ -262,6 +279,14 @@ export default {
 
 .input-changeable:focus{
 	outline: none;
+}
+
+.input-changeable-link {
+	padding: 8px 16px;
+	border: 2px solid black;
+	border-radius: 16px;
+	background-color: #FF4040;
+	flex-grow: 1;
 }
 
 .button-change {
@@ -365,6 +390,10 @@ export default {
 	text-decoration: none;
 	text-align: center;
 	color: #000000 !important;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
 }
 
 .button {

@@ -7,17 +7,30 @@ const contract = new ethers.Contract(contractAddress, contractABI, provider);
 
 export async function getAllVehicles() {
 	try {
-		const vehicles = await contract.getAllVehicles();
+		let vehicles = await contract.getAllVehicles();
 		console.log(vehicles);
+		vehicles = vehicles.map(vehicle => ({...vehicle, "id": vehicles.indexOf(vehicle)}));
+		return vehicles;
 	} catch (error) {
 		console.error(error);
+		throw new Error(error)
 	}
 }
 
 export async function getVehicle(vehicleId) {
 	try {
-		const vehicle = await contract.getVehicle(vehicleId);
+		let data = await contract.getVehicle(vehicleId);
+		console.log(data);
+		let vehicle = { ...data[0] };
+		vehicle.breakdowns = [...data[1]];
+		vehicle.damages = [...data[2]];
+		vehicle.services = [...data[3]];
+		vehicle.repairs = [...data[4]];
+		vehicle.insurances = [...data[5]];
+		// vehicle.breakdowns = vehicle.breakdowns.map(breakdown => ({ "timestamp": breakdown[0], "description" }));
+		console.log("vehicle");
 		console.log(vehicle);
+		return vehicle;
 	} catch (error) {
 		console.error(error);
 	}
@@ -165,8 +178,10 @@ export async function getVehicleOwners(vehicleId) {
 
 export async function getOwnerVehicles(ownerAddress) {
 	try {
-		const ownerVehicles = await contract.getOwnerVehicles(ownerAddress);
+		let ownerVehicles = await contract.getOwnerVehicles(ownerAddress);
 		console.log(ownerVehicles);
+		ownerVehicles = ownerVehicles.map(vehicle => ({...vehicle, "id": ownerVehicles.indexOf(vehicle)}));
+		return ownerVehicles;
 	} catch (error) {
 		console.error(error);
 	}
@@ -231,7 +246,7 @@ export async function generateData() {
 		transaction = await contractWithSigner.addService(2, "Dosao na popravak");
 		transaction = await contractWithSigner.addRepair(2, "Popravljen, kao novi je");
 		transaction = await contractWithSigner.addInsurance(1, "Protiv razbijanja, vrijedi 2 godine");
-		transaction = await contractWithSigner.authorizeAddress(0xC5a4ACCa9d971D6a7eC3b67c95e09dCc384C89dB);
+		// transaction = await contractWithSigner.authorizeAddress(0xC5a4ACCa9d971D6a7eC3b67c95e09dCc384C89dB);
 		await transaction.wait();
 		console.log(transaction);
 	} catch (error) {

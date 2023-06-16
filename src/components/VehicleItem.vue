@@ -14,9 +14,9 @@
 		</div>
 		<div class="item-container">
 			<span class="label">Current owner</span>
-			<span class="value address">{{ vehicle.owner }}</span>
+			<span class="value address">{{ vehicle.currentOwner }}</span>
 		</div>
-		<router-link :to="{ name: 'vehicle', 'params': { 'id': 1 } }" class="item-container action">
+		<router-link :to="{ name: 'vehicle', 'params': { 'id': vehicle.id } }" class="item-container action">
 			<button class="button">MORE</button>
 		</router-link>
 	</div>

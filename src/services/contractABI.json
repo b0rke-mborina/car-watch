@@ -396,9 +396,66 @@
 		"name": "getOwnerVehicles",
 		"outputs": [
 			{
-				"internalType": "uint256[]",
+				"components": [
+					{
+						"internalType": "string",
+						"name": "vin",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "make",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "model",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "year",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "currentOwner",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "breakdowns",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "damages",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "services",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "repairs",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "insurances",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "address[]",
+						"name": "owners",
+						"type": "address[]"
+					}
+				],
+				"internalType": "struct CarWatch.Vehicle[]",
 				"name": "",
-				"type": "uint256[]"
+				"type": "tuple[]"
 			}
 		],
 		"stateMutability": "view",

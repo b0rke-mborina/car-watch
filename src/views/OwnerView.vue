@@ -16,18 +16,18 @@
 </template>
 
 <script>
+import { getOwnerVehicles } from "@/services"
 import EmptyListMessage from '@/components/EmptyListMessage.vue'
 import VehicleItem from '@/components/VehicleItem.vue'
+import ErrorMessage from '@/components/ErrorMessage.vue'
 
 export default {
 	name: 'OwnerView',
 	data() {
 		return {
-			owner: {
-				"address": '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
-			},
-			ownerVehicles: [
+			ownerVehicles: [/*
 				{
+					"id": "1",
 					"vin": "111",
 					"make": "111",
 					"model": "111",
@@ -35,6 +35,7 @@ export default {
 					"owner": "111",
 				},
 				{
+					"id": "2",
 					"vin": "111",
 					"make": "111",
 					"model": "111",
@@ -42,18 +43,28 @@ export default {
 					"owner": "111",
 				},
 				{
+					"id": "2",
 					"vin": "111",
 					"make": "111",
 					"model": "111",
 					"year": "111",
 					"owner": "111",
 				}
-			],
+			*/],
+			ownerAddress: "",
 			errorMessage: ""
 		}
 	},
-	mounted() {
-		console.log("OK");
+	async mounted() {
+		this.ownerAddress = this.$route.params.address;
+		console.log("Started getter");
+		try {
+			this.ownerVehicles = await getOwnerVehicles(this.ownerAddress);
+			console.log(this.ownerVehicles);
+		} catch (error) {
+			this.errorMessage = error.message;
+		}
+		console.log("Ended getter");
 	},
 	methods:{
 		goBack(){
@@ -62,7 +73,8 @@ export default {
 	},
 	components: {
 		EmptyListMessage,
-		VehicleItem
+		VehicleItem,
+		ErrorMessage
 	},
 	props: {
 		vehicleId: String

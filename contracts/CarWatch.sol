@@ -109,6 +109,7 @@ contract CarWatch {
 		uint256 vehicleId = vehicleCount;
 		vehicles[vehicleId] = Vehicle(_vin, _make, _model, _year, msg.sender, new uint256[](0), new uint256[](0), new uint256[](0), new uint256[](0), new uint256[](0), new address[](0));
 		ownerVehicles[msg.sender].push(vehicleId);
+		vehicles[vehicleId].owners.push(msg.sender);
 
 		emit VehicleRegistered(vehicleId, _vin, _make, _model, _year, msg.sender);
 
@@ -229,8 +230,15 @@ contract CarWatch {
 		return vehicle.owners;
 	}
 
-	function getOwnerVehicles(address _owner) public view returns (uint256[] memory) {
-		return ownerVehicles[_owner];
+	function getOwnerVehicles(address _owner) public view returns (Vehicle[] memory) {
+		uint256[] storage ownerVehiclesArray = ownerVehicles[_owner];
+		Vehicle[] memory result = new Vehicle[](ownerVehiclesArray.length);
+		
+		for (uint256 i = 0; i < ownerVehiclesArray.length; i++) {
+			result[i] = vehicles[ownerVehiclesArray[i]];
+		}
+
+		return result;
 	}
 
 	function removeVehicleFromOwner(address _owner, uint256 _vehicleId) private returns (uint256[] memory) {

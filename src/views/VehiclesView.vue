@@ -18,32 +18,16 @@
 </template>
 
 <script>
+import { generateData, getAllVehicles, transferOwnership } from "@/services"
 import EmptyListMessage from '@/components/EmptyListMessage.vue'
 import VehicleItem from '@/components/VehicleItem.vue'
 import ErrorMessage from '@/components/ErrorMessage.vue'
 
 export default {
 	name: 'VehiclesView',
-	async mounted() {
-		console.log("Generating data...");
-		// await generateData();
-		console.log("Data generated.");
-
-		console.log("Started getter");
-		// await getAllVehicles();
-		console.log("Ended getter");
-		console.log("Started getter");
-		// await getVehicle(1);
-		console.log("Ended getter");
-		// console.log("Started");
-		// await transferOwnership(1, "0x70997970C51812dc3A010C7d01b50e0d17dc79C8");
-		// console.log("Ended");
-
-		// this.errorMessage = "something broke";
-	},
 	data() {
 		return {
-			vehicles: [
+			vehicles: [/*
 				{
 					"vin": "111",
 					"make": "111",
@@ -65,9 +49,26 @@ export default {
 					"year": "111",
 					"owner": "111",
 				}
-			],
+			*/],
 			errorMessage: ""
 		}
+	},
+	async mounted() {
+		console.log("Generating data...");
+		// await generateData();
+		console.log("Data generated.");
+
+		console.log("Started getter");
+		try {
+			this.vehicles = await getAllVehicles();
+			console.log(this.vehicles);
+		} catch (error) {
+			this.errorMessage = error.message;
+		}
+		console.log("Ended getter");
+		// console.log("Started");
+		// await transferOwnership(1, "0x70997970C51812dc3A010C7d01b50e0d17dc79C8");
+		// console.log("Ended");
 	},
 	components: {
 		EmptyListMessage,
