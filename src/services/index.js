@@ -163,7 +163,6 @@ export async function getVehicleInsurances(vehicleId) {
 	try {
 		const vehicleInsurances = await contract.getVehicleInsurances(vehicleId);
 		console.log(vehicleInsurances);
-		// vehicleInsurances = vehicleInsurances.map(vehicle => ({...vehicle, "id": vehicleInsurances.indexOf(vehicle)}));
 		return vehicleInsurances;
 	} catch (error) {
 		console.error(error);
@@ -195,6 +194,7 @@ export async function isAuthorizedAddress(address) {
 	try {
 		const isAuthorized = await contract.isAuthorizedAddress(address);
 		console.log(isAuthorized);
+		return isAuthorized;
 	} catch (error) {
 		throw new Error(error.message);
 	}

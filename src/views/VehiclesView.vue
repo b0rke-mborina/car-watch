@@ -16,6 +16,11 @@
 					</router-link>
 				</div>
 			</div>
+			<div class="button-container">
+				<router-link :to="{ name: 'manageAddresses' }" class="action">
+					<button class="button">MANAGE ADDRESSES</button>
+				</router-link>
+			</div>
 			<div class="list">
 				<EmptyListMessage v-if="vehicles.length === 0" />
 				<VehicleItem v-for="vehicle in vehicles" v-bind:key="vehicle" :vehicle="vehicle"/>
@@ -194,6 +199,13 @@ export default {
 
 .list {
 	margin-bottom: 64px;
+}
+
+.button-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: right;
+	margin-top: 16px;
 }
 
 @media (max-width: 1000px) {

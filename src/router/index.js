@@ -4,6 +4,7 @@ import VehiclesView from '../views/VehiclesView.vue'
 import VehicleNewView from '../views/VehicleNewView.vue'
 import VehicleView from '../views/VehicleView.vue'
 import OwnerView from '../views/OwnerView.vue'
+import ManageAddressesView from '../views/ManageAddressesView.vue'
 
 const routes = [
 	{
@@ -30,6 +31,11 @@ const routes = [
 		path: '/owner/:address',
 		name: 'owner',
 		component: OwnerView
+	},
+	{
+		path: '/manage/addresses',
+		name: 'manageAddresses',
+		component: ManageAddressesView
 	}
 ]
 
