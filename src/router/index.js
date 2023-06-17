@@ -5,6 +5,7 @@ import VehicleNewView from '../views/VehicleNewView.vue'
 import VehicleView from '../views/VehicleView.vue'
 import OwnerView from '../views/OwnerView.vue'
 import ManageAddressesView from '../views/ManageAddressesView.vue'
+import { Auth } from "@/services"
 
 const routes = [
 	{
@@ -43,5 +44,16 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
+router.beforeEach((to, from, next) => {
+	const publicPages = ["home", "vehicles", "vehicleNew", "vehicle", "owner"];
+	const ownerRequired = !publicPages.includes(to.name);
+	const isOwner = Auth.state.isOwner;
+
+	if (ownerRequired && !isOwner) {
+		return next("/vehicles");
+	}
+	next();
+});
 
 export default router

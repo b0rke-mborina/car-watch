@@ -190,6 +190,16 @@ export async function getOwnerVehicles(ownerAddress) {
 	}
 }
 
+export async function isContractOwner(address) {
+	try {
+		const isContractOwner = await contract.isContractOwner(address);
+		console.log(isContractOwner);
+		return isContractOwner;
+	} catch (error) {
+		throw new Error(error.message);
+	}
+}
+
 export async function isAuthorizedAddress(address) {
 	try {
 		const isAuthorized = await contract.isAuthorizedAddress(address);
@@ -245,3 +255,35 @@ export async function generateData() {
 		throw new Error(error.message);
 	}
 }
+
+
+export let Auth = {
+	async isAuthorized() {
+		const address = await provider.getSigner().getAddress();
+		console.log("address");
+		console.log(address);
+
+		const result = await isAuthorizedAddress(address);
+		console.log("result");
+		console.log(result);
+		return result;
+	},
+	async isContractOwner() {
+		const address = await provider.getSigner().getAddress();
+		console.log("address");
+		console.log(address);
+
+		const result = await isContractOwner(address);
+		console.log("result");
+		console.log(result);
+		return result;
+	},
+	state: {
+		get authorized() {
+			return Auth.isAuthorized();
+		},
+		get isOwner() {
+			return Auth.isContractOwner();
+		}
+	}
+};

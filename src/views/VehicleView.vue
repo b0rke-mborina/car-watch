@@ -22,7 +22,7 @@
 				</div>
 				<div class="info-group">
 					<span class="label">Current owner</span>
-					<div v-if="isAuthorized" class="info-group-item">
+					<div class="info-group-item">
 						<router-link v-if="!isChanging && vehicle.currentOwner != ''"
 							:to="{ name: 'owner', 'params': { 'address': vehicle.currentOwner } }" class="action">
 							<input v-model="vehicle.currentOwner" type="text" readonly class="input-changeable-link" />
@@ -30,12 +30,12 @@
 						<input v-model="vehicle.currentOwner" v-if="!isChanging && vehicle.currentOwner === ''"
 							type="text" readonly class="input-changeable" />
 						<input v-model="vehicle.currentOwner" v-if="isChanging" type="text" class="input-changeable" />
-						<button v-if="isAuthorized && !isChanging" @click="changeOwner" class="button-change">CHANGE</button>
+						<button v-if="auth.authorized && !isChanging" @click="changeOwner" class="button-change">CHANGE</button>
 					</div>
 				</div>
 				<div class="info-group">
 					<span class="label"></span>
-					<div v-if="isAuthorized && isChanging" class="info-group-item-changeable">
+					<div v-if="auth.authorized && isChanging" class="info-group-item-changeable">
 						<div class="info-group-item-actions">
 							<button @click="saveOwner" class="button-finish-change">SAVE</button>
 							<button @click="cancelChangingOwner" class="button-finish-change">CANCEL</button>
@@ -66,7 +66,7 @@
 				<div v-else class="list">
 					<EmptyListMessage v-if="items.length === 0" />
 					<ListItem v-for="item in items" v-bind:key="item" :item="item" />
-					<div v-if="isAuthorized && isAdding && selectedList != 'owners'" class="list-new-item">
+					<div v-if="auth.authorized && isAdding && selectedList != 'owners'" class="list-new-item">
 						<div class="new-item-data">
 							<span class="new-item-label">New item description</span>
 							<input v-model="newItemDescription" type="text" class="new-item-input" />
@@ -94,7 +94,7 @@
 <script>
 import { ethers } from 'ethers';
 import { getVehicle, transferOwnership, getVehicleOwners, addBreakdown, addDamage, addService, addRepair, addInsurance } from "@/services"
-import { getVehicleBreakdowns, getVehicleDamages, getVehicleServices, getVehicleRepairs, getVehicleInsurances } from "@/services"
+import { getVehicleBreakdowns, getVehicleDamages, getVehicleServices, getVehicleRepairs, getVehicleInsurances, Auth } from "@/services"
 import EmptyListMessage from '@/components/EmptyListMessage.vue'
 import OwnerItem from '@/components/OwnerItem.vue'
 import ListItem from '@/components/ListItem.vue'
@@ -139,14 +139,14 @@ export default {
 			items: [],
 			owners: [],
 			originalOwner: "",
-			isAuthorized: true,
 			selectedList: "breakdowns",
 			isChanging: false,
 			isAdding: false,
 			newItemDescription: "",
 			fetchingErrorMessage: "",
 			changingErrorMessage: "",
-			addingErrorMessage: ""
+			addingErrorMessage: "",
+			auth: Auth.state
 		}
 	},
 	async mounted() {

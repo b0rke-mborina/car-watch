@@ -257,6 +257,10 @@ contract CarWatch {
 		return ownerVehicleList;
 	}
 
+	function isContractOwner(address _address) public view returns (bool) {
+		return _address == contractOwner;
+	}
+
 	function isAuthorizedAddress(address _address) public view returns (bool) {
 		return authorizedAddresses[_address];
 	}

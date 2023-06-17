@@ -16,7 +16,7 @@
 					</router-link>
 				</div>
 			</div>
-			<div class="button-container">
+			<div v-if="auth.isOwner" class="button-container">
 				<router-link :to="{ name: 'manageAddresses' }" class="action">
 					<button class="button">MANAGE ADDRESSES</button>
 				</router-link>
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { generateData, getAllVehicles, transferOwnership } from "@/services"
+import { generateData, getAllVehicles, transferOwnership, Auth } from "@/services"
 import EmptyListMessage from '@/components/EmptyListMessage.vue'
 import VehicleItem from '@/components/VehicleItem.vue'
 import ErrorMessage from '@/components/ErrorMessage.vue'
@@ -65,7 +65,8 @@ export default {
 			*/],
 			vehiclesStorage: [],
 			searchString: "",
-			errorMessage: ""
+			errorMessage: "",
+			auth: Auth.state
 		}
 	},
 	async mounted() {
@@ -84,7 +85,7 @@ export default {
 		console.log("Ended getter");
 
 		// console.log("Started");
-		await transferOwnership(1, "0x70997970C51812dc3A010C7d01b50e0d17dc79C8");
+		// await transferOwnership(1, "0x70997970C51812dc3A010C7d01b50e0d17dc79C8");
 		// console.log("Ended");
 	},
 	methods: {
