@@ -1,9 +1,11 @@
 <template>
 	<div class="item">
+		<!-- Item owner address -->
 		<div class="item-container">
 			<span class="label">Owner address</span>
 			<span class="value address">{{ owner }}</span>
 		</div>
+		<!-- Item owner button link -->
 		<router-link :to="{ name: 'owner', 'params': { 'address': owner } }" class="item-container action">
 			<button class="button">MORE</button>
 		</router-link>
@@ -12,7 +14,7 @@
 
 <script>
 export default {
-	name: 'OwnerItem',
+	name: "OwnerItem",
 	props: {
 		owner: String
 	}

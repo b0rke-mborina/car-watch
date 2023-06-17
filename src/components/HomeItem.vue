@@ -1,7 +1,9 @@
 <template>
+	<!-- Item with 2 parts -->
 	<div v-if="!item.isIcons" class="item"
 		  :style="{ 'background-color': item.index % 2 === 0 ? '#FFA69E' : '#B30303',
 		  				'flex-direction': item.inverted ? 'row-reverse' : 'row' }">
+		<!-- Item content -->
 		<div class="content">
 			<div class="item-heading">{{ item.heading }}</div>
 			<div class="item-text">{{ item.text }}</div>
@@ -9,13 +11,16 @@
 				<button class="button" :style="{ 'background-color': item.index % 2 === 0 ? '#FFA69E' : '#B30303' }">SEE MORE</button>
 			</router-link>
 		</div>
+		<!-- Item images -->
 		<div class="images">
 			<img :src="require(`@/assets/icons/${this.item.images[0]}`)" class="image" />
 			<img :src="require(`@/assets/icons/${this.item.images[1]}`)" class="image" /> 
 		</div>
 	</div>
+	<!-- Item with icons -->
 	<div v-else class="item-icons" :style="{ 'background-color': item.index % 2 === 0 ? '#FFA69E' : '#B30303' }">
 		<div class="item-heading">Manage many vehicle aspects</div>
+		<!-- Item icons -->
 		<div class="icons-grid">
 			<div v-for="title in item.titles" v-bind:key="title" class="icons-item">
 				<div class="item-icon" :style="{ 'background-image': 'url(' + require(`@/assets/icons/${this.item.icons[this.item.titles.indexOf(title)]}`) + ')',
@@ -28,17 +33,7 @@
 
 <script>
 export default {
-	name: 'HomeItem',
-	mounted() {
-		// console.log(this.item);
-		// console.log(this.item.icons[this.item.titles.indexOf("damages")]);
-		// @/assets/icons/
-		/*
-		 :style="{ 'background-image': 'url(' + require(`@/assets/icons/${this.item.icons[this.item.titles.indexOf(title)]}`) + ')',
-											  'background-size': 'cover' }"
-		 */
-		// console.log(this.item.imageURLs[0]);
-	},
+	name: "HomeItem",
 	props: {
 		item: Object
 	}
@@ -113,11 +108,6 @@ export default {
 	padding: 32px 0px;
 }
 
-.item-title {
-	text-align: center;
-	padding-bottom: 8px;
-}
-
 .icons-grid {
 	height: 200px;
 	width: 100%;
@@ -140,6 +130,11 @@ export default {
 	height: 67px;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+.item-title {
+	text-align: center;
+	padding-bottom: 8px;
 }
 
 @media (max-width: 750px) {

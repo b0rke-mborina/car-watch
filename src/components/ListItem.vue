@@ -1,9 +1,11 @@
 <template>
 	<div class="item">
+		<!-- Item time and date -->
 		<div class="item-container">
 			<span class="label">Date and time</span>
 			<span class="value">{{ timeConverter(item.timestamp) }}</span>
 		</div>
+		<!-- Item description -->
 		<div class="item-container">
 			<span class="label">Description</span>
 			<span class="value">{{ item.description }}</span>
@@ -13,7 +15,7 @@
 
 <script>
 export default {
-	name: 'ListItem',
+	name: "ListItem",
 	methods: {
 		timeConverter(unixTimestamp) {
 			var unixTimestampMs = new Date(unixTimestamp * 1000);
@@ -24,7 +26,7 @@ export default {
 			var hour = unixTimestampMs.getHours();
 			var min = unixTimestampMs.getMinutes();
 			var sec = unixTimestampMs.getSeconds();
-			var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+			var time = date + " " + month + " " + year + " " + hour + ":" + min + ":" + sec ;
 			return time;
 		}
 	},

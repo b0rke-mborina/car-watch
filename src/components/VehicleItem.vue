@@ -1,5 +1,6 @@
 <template>
 	<div class="item">
+		<!-- Item values -->
 		<div class="item-container">
 			<span class="label">VIN</span>
 			<span class="value">{{ vehicle.vin }}</span>
@@ -16,6 +17,7 @@
 			<span class="label">Current owner</span>
 			<span class="value address">{{ vehicle.currentOwner }}</span>
 		</div>
+		<!-- Item button link -->
 		<router-link :to="{ name: 'vehicle', 'params': { 'id': vehicle.id } }" class="item-container action">
 			<button class="button">MORE</button>
 		</router-link>
@@ -24,7 +26,7 @@
 
 <script>
 export default {
-	name: 'VehicleItem',
+	name: "VehicleItem",
 	props: {
 		vehicle: Object
 	}

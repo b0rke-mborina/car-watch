@@ -1,14 +1,19 @@
 <template>
+	<!-- Top content item -->
 	<div class="main">
+		<!-- Top content item text -->
 		<div class="main-head">
 			<h1 class="main-heading">Car Watch</h1>
 			<h2 class="main-subheading">The most trusted vehicle management blockchain</h2>
 		</div>
+		<!-- Top content item link to app -->
 		<router-link :to="{ name: 'vehicles' }"  class="action">
 			<button class="button">See vehicles</button>
 		</router-link>
 	</div>
+	<!-- Other content items -->
 	<HomeItem v-for="item in items" v-bind:key="item" :item="item" />
+	<!-- Footer -->
 	<div class="footer">
 		<span>CarWatch blockchain</span>
 		<br>
@@ -17,14 +22,10 @@
 </template>
 
 <script>
-import { generateData, getAllVehicles, transferOwnership } from '@/services'
-import HomeItem from '@/components/HomeItem.vue'
+import HomeItem from "@/components/HomeItem.vue";
 
 export default {
-	name: 'HomeView',
-	async mounted() {
-		console.log("Page loaded.");
-	},
+	name: "HomeView",
 	data() {
 		return {
 			items: [

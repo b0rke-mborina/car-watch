@@ -1,8 +1,9 @@
 <template>
-	<div class="vehicle">
+	<div class="main">
 		<div class="content">
 			<h1 class="heading">Manage addresses</h1>
 			<div class="main-form">
+				<!-- Checking if addresses are authorized -->
 				<div class="form-group">
 					<span class="label span-2">Check if address is authorized</span>
 					<input v-model="addressCheck" type="text" class="input" />
@@ -10,6 +11,7 @@
 					<span v-if="resultCheck !== ''" class="result span-2">{{ resultCheck }}</span>
 					<ErrorMessage :message="errorMessageCheck" v-if="errorMessageCheck !== ''" class="span-2" />
 				</div>
+				<!-- Authorizing addresses -->
 				<div class="form-group">
 					<span class="label span-2">Authorize address</span>
 					<input v-model="addressAuthorize" type="text" class="input" />
@@ -17,6 +19,7 @@
 					<span v-if="resultAuthorize" class="result span-2">Address authorized!</span>
 					<ErrorMessage :message="errorMessageAuthorize" v-if="errorMessageAuthorize !== ''" class="span-2" />
 				</div>
+				<!-- Revoking addresses' authorization -->
 				<div class="form-group">
 					<span class="label span-2">Revoke address authorization</span>
 					<input v-model="addressRevoke" type="text" class="input" />
@@ -25,6 +28,7 @@
 					<ErrorMessage :message="errorMessageRevoke" v-if="errorMessageRevoke !== ''" class="span-2" />
 				</div>
 			</div>
+			<!-- Back action buttons -->
 			<div class="button-container">
 				<router-link :to="{ name: 'vehicles' }" class="action">
 					<button class="button">BACK</button>
@@ -35,9 +39,9 @@
 </template>
 
 <script>
-import { ethers } from 'ethers';
-import { isAuthorizedAddress, authorizeAddress, revokeAddress } from "@/services"
-import ErrorMessage from '@/components/ErrorMessage.vue'
+import { ethers } from "ethers";
+import { isAuthorizedAddress, authorizeAddress, revokeAddress } from "@/services";
+import ErrorMessage from "@/components/ErrorMessage.vue";
 
 export default {
 	name: 'ManageAddressesView',
@@ -58,13 +62,17 @@ export default {
 		async checkAddressAuthorization() {
 			this.clearResultsAndErrors();
 			try {
+				// make sure address is valid
 				if (!ethers.utils.isAddress(this.addressCheck)) {
 					throw new Error("Address must be valid.");
 				}
 
+				// check if address is authorized
 				const result = await isAuthorizedAddress(this.addressCheck);
 				console.log("result");
 				console.log(result);
+
+				// show result by adding a message
 				if (result) this.resultCheck = "Address is authorized.";
 				else this.resultCheck = "Address is not authorized.";
 			} catch (error) {
@@ -74,10 +82,12 @@ export default {
 		async authorizeAddressAuthorization() {
 			this.clearResultsAndErrors();
 			try {
+				// make sure address is valid
 				if (!ethers.utils.isAddress(this.addressAuthorize)) {
 					throw new Error("Address must be valid.");
 				}
 
+				// authorize address and show success message
 				await authorizeAddress(this.addressAuthorize);
 				this.resultAuthorize = 1;
 			} catch (error) {
@@ -87,10 +97,12 @@ export default {
 		async revokeAddressAuthorization() {
 			this.clearResultsAndErrors();
 			try {
+				// make sure address is valid
 				if (!ethers.utils.isAddress(this.addressRevoke)) {
 					throw new Error("Address must be valid.");
 				}
 
+				// revoke address authorization and show success message
 				await revokeAddress(this.addressRevoke);
 				this.resultRevoke = 1;
 			} catch (error) {
@@ -116,7 +128,7 @@ export default {
 </script>
 
 <style scoped>
-.vehicles {
+.main {
 	background-color: #FFA69E;
 }
 
@@ -164,18 +176,6 @@ export default {
 	outline: none;
 }
 
-.button-container {
-	margin-top: 32px;
-	margin-bottom: 64px;
-	text-align: center;
-}
-
-.action {
-	text-decoration: none;
-	text-align: center;
-	color: #000000 !important;
-}
-
 .button {
 	font-weight: bold;
 	padding: 8px 32px;
@@ -189,6 +189,18 @@ export default {
 	text-align: center;
 	font-weight: bold;
 	padding: 8px 0px;
+}
+
+.button-container {
+	margin-top: 32px;
+	margin-bottom: 64px;
+	text-align: center;
+}
+
+.action {
+	text-decoration: none;
+	text-align: center;
+	color: #000000 !important;
 }
 
 @media (max-width: 700px) {

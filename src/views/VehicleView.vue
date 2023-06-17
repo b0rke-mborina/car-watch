@@ -3,7 +3,9 @@
 		<div class="content">
 			<h1 class="heading">Vehicle {{ this.$route.params.id }}</h1>
 			<div class="vehicle-info">
+				<!-- Error message for data retrieval -->
 				<ErrorMessage :message="fetchingErrorMessage" v-if="fetchingErrorMessage !== ''" />
+				<!-- Form with labels and inputs -->
 				<div class="info-group">
 					<span class="label">VIN</span>
 					<input v-model="vehicle.vin" type="text" readonly class="input" />
@@ -20,19 +22,25 @@
 					<span class="label">Year</span>
 					<input v-model="vehicle.year" type="text" readonly class="input" />
 				</div>
+				<!-- Label and input for owner, changing owner enabled -->
 				<div class="info-group">
 					<span class="label">Current owner</span>
 					<div class="info-group-item">
-						<router-link v-if="!isChanging && vehicle.currentOwner != ''"
+						<!-- Owner input link (visible only if owner address is not empty) -->
+						<router-link v-if="!isChanging && vehicle.currentOwner !== ''"
 							:to="{ name: 'owner', 'params': { 'address': vehicle.currentOwner } }" class="action">
 							<input v-model="vehicle.currentOwner" type="text" readonly class="input-changeable-link" />
 						</router-link>
+						<!-- Owner input (visible only if owner address is empty - placeholder until vehicle is fetched) -->
 						<input v-model="vehicle.currentOwner" v-if="!isChanging && vehicle.currentOwner === ''"
 							type="text" readonly class="input-changeable" />
+						<!-- Change owner input (visible only if owner is being changed) -->
 						<input v-model="vehicle.currentOwner" v-if="isChanging" type="text" class="input-changeable" />
+						<!-- Change owner button (visible only if user address is authorized) -->
 						<button v-if="auth.authorized && !isChanging" @click="changeOwner" class="button-change">CHANGE</button>
 					</div>
 				</div>
+				<!-- Action buttons for changing owner -->
 				<div class="info-group">
 					<span class="label"></span>
 					<div v-if="auth.authorized && isChanging" class="info-group-item-changeable">
@@ -41,10 +49,12 @@
 							<button @click="cancelChangingOwner" class="button-finish-change">CANCEL</button>
 						</div>
 					</div>
+					<!-- Error message for changing owner -->
 					<ErrorMessage :message="changingErrorMessage" v-if="changingErrorMessage !== ''" />
 				</div>
 			</div>
 			<div class="lists">
+				<!-- List of buttons for changing which vehicle items are shown -->
 				<div class="list-options">
 					<button id="breakdowns" @click="changeItems('breakdowns')"
 							  :class="`button-item ${selectedList === 'breakdowns' ? 'active' : ''}`">Breakdowns</button>
@@ -59,29 +69,37 @@
 					<button id="owners" @click="changeItems('owners')"
 							  :class="`button-item ${selectedList === 'owners' ? 'active' : ''}`">Owners</button>
 				</div>
+				<!-- List of vehicle owner items -->
 				<div v-if="selectedList === 'owners'" class="list">
 					<EmptyListMessage v-if="owners.length === 0" />
 					<OwnerItem v-for="owner in owners" v-bind:key="owner" :owner="owner" />
 				</div>
+				<!-- List of vehicle items -->
 				<div v-else class="list">
 					<EmptyListMessage v-if="items.length === 0" />
 					<ListItem v-for="item in items" v-bind:key="item" :item="item" />
+					<!-- Action buttons and input for adding new vehicle item (item is added to selected list) -->
 					<div v-if="auth.authorized && isAdding && selectedList != 'owners'" class="list-new-item">
+						<!-- Input for adding new vehicle item -->
 						<div class="new-item-data">
 							<span class="new-item-label">New item description</span>
 							<input v-model="newItemDescription" type="text" class="new-item-input" />
 						</div>
+						<!-- Action buttons for adding new vehicle item -->
 						<div class="new-item-actions">
 							<button @click="saveNewItem" class="button-finish-change">SAVE</button>
 							<button @click="cancelAddingNewItem" class="button-finish-change">CANCEL</button>
 						</div>
 					</div>
 				</div>
+				<!-- Error message for adding new vehicle item -->
 				<ErrorMessage :message="addingErrorMessage" v-if="addingErrorMessage !== ''" />
+				<!-- Add new action button for adding new vehicle item -->
 				<div class="list-button-container">
 					<button id="breakdowns" v-if="selectedList !== 'owners'" @click="handleAddingItem" class="button-add">ADD NEW</button>
 				</div>
 			</div>
+			<!-- Back button link -->
 			<div class="button-container">
 				<router-link :to="{ name: 'vehicles', 'params': { 'id': vehicle.id } }" class="action">
 					<button class="button">BACK</button>
@@ -92,16 +110,16 @@
 </template>
 
 <script>
-import { ethers } from 'ethers';
-import { getVehicle, transferOwnership, getVehicleOwners, addBreakdown, addDamage, addService, addRepair, addInsurance } from "@/services"
-import { getVehicleBreakdowns, getVehicleDamages, getVehicleServices, getVehicleRepairs, getVehicleInsurances, Auth } from "@/services"
-import EmptyListMessage from '@/components/EmptyListMessage.vue'
-import OwnerItem from '@/components/OwnerItem.vue'
-import ListItem from '@/components/ListItem.vue'
-import ErrorMessage from '@/components/ErrorMessage.vue'
+import { ethers } from "ethers";
+import { getVehicle, transferOwnership, getVehicleOwners, addBreakdown, addDamage, addService, addRepair, addInsurance } from "@/services";
+import { getVehicleBreakdowns, getVehicleDamages, getVehicleServices, getVehicleRepairs, getVehicleInsurances, Auth } from "@/services";
+import EmptyListMessage from "@/components/EmptyListMessage.vue";
+import OwnerItem from "@/components/OwnerItem.vue";
+import ListItem from "@/components/ListItem.vue";
+import ErrorMessage from "@/components/ErrorMessage.vue";
 
 export default {
-	name: 'VehicleView',
+	name: "VehicleView",
 	data() {
 		return {
 			vehicle: {
@@ -111,30 +129,12 @@ export default {
 				"model": "",
 				"year": "",
 				"currentOwner": "",
-				"breakdowns": [/*
-					{
-						"timestamp": 1686763423,
-						"description": "it was ericsson"
-					},
-					{
-						"timestamp": 1686763433,
-						"description": "ericsson's fault again"
-					}
-				*/],
+				"breakdowns": [],
 				"damages": [],
 				"services": [],
 				"repairs": [],
 				"insurances": [],
-				"owners": [/*
-					{
-						"timestamp": 1686763423,
-						"address": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-					},
-					{
-						"timestamp": 1686763433,
-						"address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
-					}
-				*/]
+				"owners": []
 			},
 			items: [],
 			owners: [],
@@ -152,6 +152,7 @@ export default {
 	async mounted() {
 		this.vehicle.id = this.$route.params.id;
 
+		// get vehicle data
 		console.log("Started getter");
 		try {
 			this.vehicle = await getVehicle(this.vehicle.id);
@@ -161,6 +162,7 @@ export default {
 		}
 		console.log("Ended getter");
 		
+		// make copies of vehicle data for modification
 		this.items = this.vehicle.breakdowns;
 		this.owners = this.vehicle.owners;
 		this.originalOwner = this.vehicle.currentOwner;
@@ -178,19 +180,22 @@ export default {
 		},
 		async saveOwner() {
 			try {
+				// make sure owner address is 
 				if (!ethers.utils.isAddress(this.vehicle.currentOwner)) {
 					this.vehicle.currentOwner = this.originalOwner;
 					throw new Error("Address of the new owner must be valid.");
 				}
 
+				// change owner
 				const vehicleId = parseInt(this.$route.params.id);
 				console.log(vehicleId);
 				const response = await transferOwnership(vehicleId, this.vehicle.currentOwner);
 				console.log("response");
 				console.log(response);
+				
+				// update page content
 				this.originalOwner = this.vehicle.currentOwner;
 				this.isChanging = false;
-				
 				this.vehicle.owners = await getVehicleOwners(vehicleId);
 				this.owners = this.vehicle.owners;
 			} catch (error) {
@@ -203,10 +208,14 @@ export default {
 			this.vehicle.currentOwner = this.originalOwner;
 		},
 		async saveNewItem() {
+			// if description of new item is empty, show error, otherwise execute function
 			if (this.newItemDescription === "") {
 				this.addingErrorMessage = "Description is required.";
 			} else {
+				// get vehicle id
 				const vehicleId = parseInt(this.$route.params.id);
+				
+				// add item to selected list and update that list
 				try {
 					if (this.selectedList === "breakdowns") {
 						await addBreakdown(vehicleId, this.newItemDescription);
@@ -229,6 +238,8 @@ export default {
 						this.vehicle.insurances = await getVehicleInsurances(vehicleId);
 						this.items = this.vehicle.insurances;
 					}
+
+					// update page content
 					this.isAdding = false;
 					this.newItemDescription = "";
 				} catch (error) {

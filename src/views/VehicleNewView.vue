@@ -2,6 +2,7 @@
 	<div class="vehicle">
 		<div class="content">
 			<h1 class="heading">New vehicle</h1>
+			<!-- Form with labels and inputs -->
 			<div class="vehicle-info">
 				<div class="info-group">
 					<span class="label">VIN</span>
@@ -20,7 +21,9 @@
 					<input v-model="vehicle.year" type="text" class="input" />
 				</div>
 			</div>
+			<!-- Showing error message -->
 			<ErrorMessage :message="errorMessage" v-if="errorMessage !== ''" />
+			<!-- Action buttons -->
 			<div class="button-container">
 				<button @click="saveNewVehicle" class="button">SAVE</button>
 				<router-link :to="{ name: 'vehicles' }" class="action">
@@ -32,11 +35,11 @@
 </template>
 
 <script>
-import { registerVehicle } from "@/services"
-import ErrorMessage from '@/components/ErrorMessage.vue'
+import { registerVehicle } from "@/services";
+import ErrorMessage from "@/components/ErrorMessage.vue";
 
 export default {
-	name: 'VehicleNewView',
+	name: "VehicleNewView",
 	data() {
 		return {
 			vehicle: {
@@ -50,17 +53,20 @@ export default {
 	},
 	methods: {
 		async saveNewVehicle() {
+			// if at least one of the values is empty, show error, otherwise execute function
 			if (this.vehicle.vin === "" || this.vehicle.make === "" || this.vehicle.model === "" || this.vehicle.year === "") {
 				this.errorMessage = "All values are required.";
 			} else {
 				console.log("Started saving vehicle...");
 				try {
+					// make year an integer and make sure it's a number bigger than 0
 					this.vehicle.year = parseInt(this.vehicle.year);
 					if (isNaN(this.vehicle.year) || (!isNaN(this.vehicle.year) && this.vehicle.year <= 0)) {
 						this.vehicle.year = "";
 						throw new Error("Year must be a whole number bigger than 0.");
 					}
 
+					// register vehicle and change route to list of vehicles
 					this.vehicle = await registerVehicle(this.vehicle.vin, this.vehicle.make, this.vehicle.model, this.vehicle.year);
 					console.log("Vehicle saved");
 					console.log(this.vehicle);
@@ -81,7 +87,7 @@ export default {
 </script>
 
 <style scoped>
-.vehicles {
+.vehicle {
 	background-color: #FFA69E;
 }
 
@@ -114,22 +120,6 @@ export default {
 	line-height: 32px;
 }
 
-.info-group-item {
-	display: flex;
-	flex-direction: row;
-}
-
-.info-group-item-changeable {
-	display: flex;
-	flex-direction: column;
-}
-
-.info-group-item-actions {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-}
-
 .input {
 	padding: 8px 16px;
 	border: 2px solid black;
@@ -137,75 +127,8 @@ export default {
 	background-color: #FF4040;
 }
 
-.input-changeable {
-	padding: 8px 16px;
-	border: 2px solid black;
-	border-radius: 16px;
-	background-color: #FF4040;
-	width: 100%;
-}
-
 .input:focus{
 	outline: none;
-}
-
-.button-change {
-	font-weight: bold;
-	padding: 8px 16px;
-	border: 2px solid black;
-	border-radius: 16px;
-	background-color: #B30303;
-	margin-left: 8px;
-}
-
-.button-finish-change {
-	font-weight: bold;
-	padding: 8px 16px;
-	border: 2px solid black;
-	border-radius: 16px;
-	background-color: #B30303;
-	margin: 0px 4px;
-}
-
-.lists {
-	margin-top: 16px;
-}
-
-.list-options {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	justify-content: space-around;
-}
-
-.button-item {
-	padding: 8px 16px;
-	border-radius: 16px;
-	border-width: 0px;
-	background-color: #B30303;
-	margin: 8px 4px;
-}
-
-.active {
-	font-weight: bold;
-	border: 2px solid black;
-}
-
-.list {
-	margin-bottom: 16px;
-}
-
-.list-button-container {
-	margin-top: 24px;
-	text-align: center;
-}
-
-.button-add {
-	font-weight: bold;
-	padding: 8px 16px;
-	border: 2px solid black;
-	border-radius: 16px;
-	background-color: #B30303;
 }
 
 .button-container {

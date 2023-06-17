@@ -3,10 +3,12 @@
 		<div class="content">
 			<h1 class="heading">Vehicles</h1>
 			<div class="actions-container">
+				<!-- Search bar -->
 				<div class="search">
 					<img :src="require(`@/assets/icons/search.png`)" class="search-icon" />
 					<input v-model="searchString" @change="updateVehicleList" type="text" class="input" />
 				</div>
+				<!-- Action button links -->
 				<div class="buttons">
 					<router-link :to="{ name: 'vehicleNew' }" class="action-button">
 						<button class="button">ADD NEW</button>
@@ -16,11 +18,13 @@
 					</router-link>
 				</div>
 			</div>
+			<!-- Manage addresses action button links -->
 			<div v-if="auth.isOwner" class="button-container">
-				<router-link :to="{ name: 'manageAddresses' }" class="action">
+				<router-link :to="{ name: 'manageAddresses' }">
 					<button class="button">MANAGE ADDRESSES</button>
 				</router-link>
 			</div>
+			<!-- List of vehicles -->
 			<div class="list">
 				<EmptyListMessage v-if="vehicles.length === 0" />
 				<VehicleItem v-for="vehicle in vehicles" v-bind:key="vehicle" :vehicle="vehicle"/>
@@ -31,38 +35,16 @@
 </template>
 
 <script>
-import { generateData, getAllVehicles, transferOwnership, Auth } from "@/services"
-import EmptyListMessage from '@/components/EmptyListMessage.vue'
-import VehicleItem from '@/components/VehicleItem.vue'
-import ErrorMessage from '@/components/ErrorMessage.vue'
+import { generateData, getAllVehicles, transferOwnership, Auth } from "@/services";
+import EmptyListMessage from "@/components/EmptyListMessage.vue";
+import VehicleItem from "@/components/VehicleItem.vue";
+import ErrorMessage from "@/components/ErrorMessage.vue";
 
 export default {
-	name: 'VehiclesView',
+	name: "VehiclesView",
 	data() {
 		return {
-			vehicles: [/*
-				{
-					"vin": "111",
-					"make": "111",
-					"model": "111",
-					"year": "111",
-					"owner": "111",
-				},
-				{
-					"vin": "111",
-					"make": "111",
-					"model": "111",
-					"year": "111",
-					"owner": "111",
-				},
-				{
-					"vin": "111",
-					"make": "111",
-					"model": "111",
-					"year": "111",
-					"owner": "111",
-				}
-			*/],
+			vehicles: [],
 			vehiclesStorage: [],
 			searchString: "",
 			errorMessage: "",
@@ -90,21 +72,30 @@ export default {
 	},
 	methods: {
 		updateVehicleList() {
+			// if search string is empty, add all vehicles to list, otherwise filter vehicles
 			if (this.searchString.trim() === "") {
 				this.vehicles = this.vehiclesStorage;
 			} else {
+				// create array of keywords from search string
 				let keywords = this.searchString.toLowerCase().split(" ").filter(str => str !== "");
 			
+				// make new array of vehicles
 				let result = [];
 				this.vehiclesStorage.forEach(vehicle => {
+					// values which are filtered by
 					let objectValuesList = [
 						vehicle.vin.toLowerCase(), vehicle.make.toLowerCase(), vehicle.model.toLowerCase(),
 						vehicle.year.toString(), vehicle.currentOwner
 					];
+
+					// filter velues using helper function
 					let valuesList = objectValuesList.filter(value => this.includesKeyword(value, keywords));
+					
+					// if any value has any keyword, add vehicle to list
 					if (valuesList.length > 0) result.push(vehicle);
 				});
 
+				// set filtered vehicles
 				this.vehicles = result;
 			}
 		},
@@ -186,7 +177,7 @@ export default {
 }
 
 .action-button {
-	margin: 0px 4px;
+	margin-left: 8px;
 }
 
 .button {
@@ -198,15 +189,15 @@ export default {
 	margin-bottom: 16px;
 }
 
-.list {
-	margin-bottom: 64px;
-}
-
 .button-container {
 	display: flex;
 	flex-direction: row;
 	justify-content: right;
 	margin-top: 16px;
+}
+
+.list {
+	margin-bottom: 64px;
 }
 
 @media (max-width: 1000px) {
